@@ -16,7 +16,7 @@
     <a href="https://github.com/shaykandagor/wbma23-project-G11"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://www.figma.com/proto/dzKQoXmxZIYYKZEXbQU9No/WBMA2023?node-id=46%3A3&scaling=min-zoom&page-id=0%3A1&starting-point-node-id=23%3A4">View Demo</a>
   </p>
 </div>
 
