@@ -1,19 +1,16 @@
 import React from 'react';
-import {SafeAreaView, Platform, StatusBar, StyleSheet} from 'react-native';
-import WelcomeScreen from './app/screens/WelcomeScreen';
+import {StyleSheet, SafeAreaView, Platform, StatusBar} from 'react-native';
+import List from './components/List';
 
 const App = () => {
-  // console.log('App Starting!');
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <WelcomeScreen />
+        <List />
       </SafeAreaView>
     </>
   );
 };
-
-export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -22,3 +19,5 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
 });
+
+export default App;
