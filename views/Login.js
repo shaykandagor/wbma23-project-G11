@@ -3,20 +3,25 @@ import {StyleSheet, View, Text, Button} from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuthentication} from '../hooks/ApiHooks';
 
 // Login function is called when the login button is pressed
 const Login = ({navigation}) => {
   const {setIsLoggedIn} = useContext(MainContext);
+  const {postLogin} = useAuthentication();
 
   const logIn = async () => {
     console.log('Login button pressed');
-    setIsLoggedIn(true);
+    const data = {username: 'shaynek', password: 'secret254'};
     // Used to save the data of the user as a token
     // So if the user logs in again the device has the user's data therefore a successfull login
     try {
-      await AsyncStorage.setItem('userToken', 'abc123');
+      const loginResult = await postLogin(data);
+      console.log('logIn', loginResult);
+      await AsyncStorage.setItem('userToken', loginResult.token);
+      setIsLoggedIn(true);
     } catch (error) {
-      console.error('error in storing token', error);
+      console.error('LogIn', error);
     }
   };
   // Saves the value of userToken saved in AsyncStorage as userToken
