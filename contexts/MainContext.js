@@ -9,8 +9,9 @@ const MainContext = React.createContext({});
 const MainProvider = (props) => {
   //  Provides access to the values inside the content application wide in array format
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
   return (
-    <MainContext.Provider value={{isLoggedIn, setIsLoggedIn}}>
+    <MainContext.Provider value={{isLoggedIn, setIsLoggedIn, user, setUser}}>
       {props.children}
     </MainContext.Provider>
   );

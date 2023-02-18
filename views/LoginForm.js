@@ -1,13 +1,12 @@
 import React, {useContext} from 'react';
-import PropTypes from 'prop-types';
 import {Button, Text, TextInput, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {Controller, useForm} from 'react-hook-form';
 
-const LoginForm = (props) => {
-  const {setIsLoggedIn} = useContext(MainContext);
+const LoginForm = () => {
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {postLogin} = useAuthentication();
   const {
     control,
@@ -30,6 +29,7 @@ const LoginForm = (props) => {
       const loginResult = await postLogin(loginData);
       console.log('logIn', loginResult);
       await AsyncStorage.setItem('userToken', loginResult.token);
+      setUser(loginResult.user);
       setIsLoggedIn(true);
     } catch (error) {
       console.error('LogIn', error);
@@ -78,11 +78,9 @@ const LoginForm = (props) => {
         name="password"
       />
       {errors.password && <Text>Password (min, 5 chars) is required.</Text>}
-      <Button title="Sign in!" onPress={handleSubmit(logIn)} />
+      <Button title="Log in!" onPress={handleSubmit(logIn)} />
     </View>
   );
 };
-
-LoginForm.propTypes = {};
 
 export default LoginForm;
