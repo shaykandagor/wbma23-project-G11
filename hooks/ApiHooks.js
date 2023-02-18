@@ -44,7 +44,7 @@ const useAuthentication = () => {
   const postLogin = async (userCredentials) => {
     const options = {
       // Sending json data with POST
-      method: 'post',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -62,9 +62,20 @@ const useAuthentication = () => {
 };
 
 const useUser = () => {
-  const checkUser = async () => {};
+  const getUserByToken = async (token) => {
+    const options = {
+      // Sending json data with POST
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    try {
+      return await doFetch(baseUrl + 'users/user', options);
+    } catch (error) {
+      throw new Error('getUserByToken: ' + error.message);
+    }
+  };
 
-  return {checkUser};
+  return {getUserByToken};
 };
 
 export {useMedia, useAuthentication, useUser};
