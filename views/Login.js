@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -40,24 +41,26 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <TouchableOpacity
-      onPress={() => Keyboard.dismiss()}
-      style={{flex: 1}}
-      activeOpacity={1}
-    >
-      <KeyboardAvoidingView style={styles.container}>
-        {toggleForm ? <LoginForm /> : <RegisterForm />}
-        <Text>
-          {toggleForm ? 'No account yet?' : 'Already have an account?'}
-        </Text>
-        <Button
-          title={toggleForm ? 'Register' : 'Login'}
-          onPress={() => {
-            setToggleForm(!toggleForm);
-          }}
-        />
-      </KeyboardAvoidingView>
-    </TouchableOpacity>
+    <ScrollView>
+      <TouchableOpacity
+        onPress={() => Keyboard.dismiss()}
+        style={{flex: 1}}
+        activeOpacity={1}
+      >
+        <KeyboardAvoidingView style={styles.container}>
+          {toggleForm ? <LoginForm /> : <RegisterForm />}
+          <Text>
+            {toggleForm ? 'No account yet?' : 'Already have an account?'}
+          </Text>
+          <Button
+            title={toggleForm ? 'Register' : 'Login'}
+            onPress={() => {
+              setToggleForm(!toggleForm);
+            }}
+          />
+        </KeyboardAvoidingView>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 

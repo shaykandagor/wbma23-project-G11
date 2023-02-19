@@ -10,6 +10,7 @@ const RegisterForm = () => {
   const {postUser, checkUsername} = useUser();
   const {
     control,
+    getValues,
     handleSubmit,
     formState: {errors},
   } = useForm({
@@ -18,11 +19,13 @@ const RegisterForm = () => {
       email: '',
       username: '',
       password: '',
+      confirmPassword: '',
     },
     mode: 'onBlur',
   });
 
   const register = async (registerData) => {
+    delete registerData.confirmPassword;
     console.log('Registering', registerData);
     try {
       const registerResult = await postUser(registerData);
@@ -130,6 +133,31 @@ const RegisterForm = () => {
           />
         )}
         name="password"
+      />
+      <Controller
+        control={control}
+        rules={{
+          validate: (value) => {
+            if (value === getValues('password')) {
+              return true;
+            } else {
+              return 'passwords must match';
+            }
+          },
+        }}
+        render={({field: {onChange, onBlur, value}}) => (
+          <Input
+            placeholder="Confirm Password"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            secureTextEntry={true}
+            errorMessage={
+              errors.confirmPassword && errors.confirmPassword.message
+            }
+          />
+        )}
+        name="confirmPassword"
       />
       <Button title="Sign in!" onPress={handleSubmit(register)} />
     </View>
