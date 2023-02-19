@@ -1,8 +1,10 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
+  Button,
   Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
+  Text,
   TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -16,6 +18,8 @@ import RegisterForm from './RegisterForm';
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {getUserByToken} = useUser();
+
+  const [toggleForm, setToggleForm] = useState(true);
 
   // Saves the value of userToken saved in AsyncStorage as userToken
   const checkToken = async () => {
@@ -43,8 +47,16 @@ const Login = ({navigation}) => {
       activeOpacity={1}
     >
       <KeyboardAvoidingView style={styles.container}>
-        <LoginForm />
-        <RegisterForm />
+        {toggleForm ? <LoginForm /> : <RegisterForm />}
+        <Text>
+          {toggleForm ? 'Dont have an account?' : 'Already have an account?'}
+        </Text>
+        <Button
+          title={toggleForm ? 'Register' : 'Login'}
+          onPress={() => {
+            setToggleForm(!toggleForm);
+          }}
+        />
       </KeyboardAvoidingView>
     </TouchableOpacity>
   );
