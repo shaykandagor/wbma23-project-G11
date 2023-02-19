@@ -1,10 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
-  Button,
   Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
-  Text,
   TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -13,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import {Button, Text} from '@rneui/themed';
 
 // Login function is called when the login button is pressed
 const Login = ({navigation}) => {
@@ -49,7 +48,7 @@ const Login = ({navigation}) => {
       <KeyboardAvoidingView style={styles.container}>
         {toggleForm ? <LoginForm /> : <RegisterForm />}
         <Text>
-          {toggleForm ? 'Dont have an account?' : 'Already have an account?'}
+          {toggleForm ? 'No account yet?' : 'Already have an account?'}
         </Text>
         <Button
           title={toggleForm ? 'Register' : 'Login'}
@@ -64,10 +63,7 @@ const Login = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 16,
   },
 });
 
