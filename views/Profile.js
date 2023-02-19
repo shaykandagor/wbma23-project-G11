@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, SafeAreaView, Text, Button, Image} from 'react-native';
+import {Button} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
+import {Card, ListItem} from '@rneui/themed';
+import {Icon} from '@rneui/themed';
 
 const Profile = () => {
   const {getFilesByTag} = useTag();
@@ -25,12 +27,26 @@ const Profile = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Profile</Text>
-      <Image style={styles.image} source={{uri: uploadsUrl + avatar}} />
-      <Text>Full Name: {user.full_name}</Text>
-      <Text>Username: {user.username}</Text>
-      <Text>Email: {user.email}</Text>
+    <Card>
+      <Card.Image source={{uri: uploadsUrl + avatar}} />
+      <ListItem>
+        <ListItem.Title>
+          <Icon name="badge"></Icon>
+          {user.full_name}
+        </ListItem.Title>
+      </ListItem>
+      <ListItem>
+        <ListItem.Title>
+          <Icon name="person"></Icon>
+          {user.username}
+        </ListItem.Title>
+      </ListItem>
+      <ListItem>
+        <ListItem.Title>
+          <Icon name="email"></Icon>
+          {user.email}
+        </ListItem.Title>
+      </ListItem>
       <Button
         title="Logout!"
         onPress={async () => {
@@ -45,22 +61,8 @@ const Profile = () => {
           }
         }}
       />
-    </SafeAreaView>
+    </Card>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 40,
-  },
-  image: {
-    width: 200,
-    height: 300,
-  },
-});
 
 export default Profile;
