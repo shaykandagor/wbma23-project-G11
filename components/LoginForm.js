@@ -1,9 +1,10 @@
 import React, {useContext} from 'react';
-import {Button, Text, TextInput, View} from 'react-native';
+import {Button, Text, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {Controller, useForm} from 'react-hook-form';
+import {Input} from '@rneui/base';
 
 const LoginForm = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -43,41 +44,38 @@ const LoginForm = () => {
       <Controller
         control={control}
         rules={{
-          required: true,
-          minLength: 3,
+          required: {value: true, message: 'Username is required.'},
         }}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
+          <Input
             placeholder="Username"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            autoCapitalize="none"
+            errorMessage={errors.username && errors.username.message}
           />
         )}
         name="username"
       />
-      {errors.username?.type === 'required' && <Text>is required</Text>}
-      {errors.username?.type === 'minLength' && (
-        <Text>min length is 3 characters</Text>
-      )}
       <Controller
         control={control}
         rules={{
-          required: true,
-          minLength: 5,
+          required: {value: true, message: 'Password is required'},
         }}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
+          <Input
             placeholder="Password"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             secureTextEntry={true}
+            errorMessage={errors.password && errors.password.message}
           />
         )}
         name="password"
       />
-      {errors.password && <Text>Password (min, 5 chars) is required.</Text>}
+
       <Button title="Log in!" onPress={handleSubmit(logIn)} />
     </View>
   );

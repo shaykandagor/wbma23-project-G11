@@ -49,7 +49,10 @@ const RegisterForm = () => {
       <Controller
         control={control}
         rules={{
-          minLength: 3,
+          minLength: {
+            value: 3,
+            message: 'Full name min length is 3 characters.',
+          },
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
@@ -58,17 +61,19 @@ const RegisterForm = () => {
             onChangeText={onChange}
             value={value}
             autoCapitalize="words"
+            errorMessage={errors.full_name && errors.full_name.message}
           />
         )}
         name="full_name"
       />
-      {errors.full_name?.type === 'minLength' && (
-        <Text>min length is 3 characters</Text>
-      )}
       <Controller
         control={control}
         rules={{
-          required: true,
+          required: {value: true, message: 'Email is required.'},
+          pattern: {
+            value: /^[a-z0-9.-]{1,64}@[a-z0-9.-]{3,64}/i,
+            message: 'Must be a valid email',
+          },
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
@@ -77,15 +82,15 @@ const RegisterForm = () => {
             onChangeText={onChange}
             value={value}
             autoCapitalize="none"
+            errorMessage={errors.email && errors.email.message}
           />
         )}
         name="email"
       />
-      {errors.email?.type === 'required' && <Text>is required</Text>}
       <Controller
         control={control}
         rules={{
-          required: {value: true, message: 'This is required.'},
+          required: {value: true, message: 'Username is required.'},
           minLength: {
             value: 3,
             message: 'Username min length is 3 characters.',
@@ -104,15 +109,15 @@ const RegisterForm = () => {
         )}
         name="username"
       />
-      {errors.username?.type === 'required' && <Text>is required</Text>}
-      {errors.username?.type === 'minLength' && (
-        <Text>min length is 3 characters</Text>
-      )}
       <Controller
         control={control}
         rules={{
-          required: true,
-          minLength: 5,
+          required: {value: true, message: 'Password is required.'},
+          pattern: {
+            value: /(?=.*\p{Lu})(?=.*[0-9]).{5,}/u,
+            message:
+              'Min 5 characters, needs one number and one uppercase letter',
+          },
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
@@ -121,11 +126,11 @@ const RegisterForm = () => {
             onChangeText={onChange}
             value={value}
             secureTextEntry={true}
+            errorMessage={errors.password && errors.password.message}
           />
         )}
         name="password"
       />
-      {errors.password && <Text>Password (min, 5 chars) is required.</Text>}
       <Button title="Sign in!" onPress={handleSubmit(register)} />
     </View>
   );

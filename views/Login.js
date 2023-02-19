@@ -9,9 +9,9 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
 import {Button, Text} from '@rneui/themed';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
 // Login function is called when the login button is pressed
 const Login = ({navigation}) => {
