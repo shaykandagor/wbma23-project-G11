@@ -1,18 +1,14 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card, Input} from '@rneui/themed';
 import {Controller, useForm} from 'react-hook-form';
-import {
-  ActivityIndicator,
-  Keyboard,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {Alert, Keyboard, ScrollView, TouchableOpacity} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import {useMedia} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
+import {useFocusEffect} from '@react-navigation/native';
+import {appId} from '../utils/variables';
 
 const Upload = ({navigation}) => {
   const [mediafile, setMediafile] = useState({});
@@ -20,17 +16,21 @@ const Upload = ({navigation}) => {
   // Loading is false the Activity Indicator is hidden
   const [loading, setLoading] = useState(false);
   const {postMedia} = useMedia();
+  const {postTag} = useTag();
   const {update, setUpdate} = useContext(MainContext);
   const {
     control,
     handleSubmit,
     formState: {errors},
+    trigger,
+    reset,
   } = useForm({
     defaultValues: {
       // category: '',
       // size: '',
       title: '',
       description: '',
+      mode: 'onChange',
     },
   });
 
@@ -55,20 +55,25 @@ const Upload = ({navigation}) => {
     console.log('form data', formData);
 
     try {
-      const result = await postMedia(
-        formData,
-        await AsyncStorage.getItem('userToken')
-      );
-      setLoading(false);
-      console.log('upload result', result);
-      Alert.alert('Upload Ok', 'file id: ' + result.file_id, [
+      const token = await AsyncStorage.getItem('userToken');
+      const result = await postMedia(formData, token);
+
+      const appTag = {
+        file_id: result.file_id,
+        tag: appId,
+      };
+      const tagResult = await postTag(appTag, token);
+      console.log('tag result', tagResult);
+
+      Alert.alert('Upload Ok', 'File id: ' + result.file_id, [
         {
           text: 'OK',
           onPress: () => {
             console.log('OK Pressed');
-            // TODO: Navigate to home
+            // update 'update' state in context
             setUpdate(!update);
-            // update the update state in the main context
+            // Navigation to home
+            navigation.navigate('Home');
           },
         },
       ]);
@@ -77,41 +82,60 @@ const Upload = ({navigation}) => {
     } finally {
       setLoading(false);
     }
-
-    console.log('upload a file', data);
   };
 
   // This function is async because when the system launches the image picker it
   // waits for the user to choose an image from the device and then the file is ready
   const pickFile = async () => {
-    // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.5,
-    });
+    try {
+      // No permissions request is necessary for launching the image library
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.5,
+      });
 
-    console.log(result);
+      console.log(result);
 
-    if (!result.canceled) {
-      setMediafile(result.assets[0]);
+      if (!result.canceled) {
+        setMediafile(result.assets[0]);
+        // validate form
+        trigger();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
+  const resetForm = () => {
+    setMediafile({});
+    reset();
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        console.log('leaving');
+        resetForm();
+      };
+    }, [])
+  );
+
   return (
     <ScrollView>
-      <TouchableOpacity
-        onPress={() => Keyboard.dismiss()}
-        style={{flex: 1}}
-        activeOpacity={1}
-      >
+      <TouchableOpacity onPress={() => Keyboard.dismiss()} activeOpacity={1}>
         <Card>
-          <Card.Image
-            source={{
-              uri: mediafile.uri || 'https://picsum.photos/id/237/200/300',
-            }}
-          />
+          {mediafile.type === 'video' ? (
+            <Card.Title>Video</Card.Title>
+          ) : (
+            <Card.Image
+              source={{
+                uri: mediafile.uri || 'https://picsum.photos/id/237/200/300',
+              }}
+              onPress={pickFile}
+            />
+          )}
           {/* <Controller
             control={control}
             rules={{
@@ -150,6 +174,10 @@ const Upload = ({navigation}) => {
             control={control}
             rules={{
               required: {value: true, message: 'Title is required.'},
+              minLength: {
+                value: 3,
+                message: 'Title min length is 3 characters.',
+              },
             }}
             render={({field: {onChange, onBlur, value}}) => (
               <Input
@@ -165,6 +193,12 @@ const Upload = ({navigation}) => {
           />
           <Controller
             control={control}
+            rules={{
+              minLength: {
+                value: 5,
+                message: 'Description min length is 5 characters.',
+              },
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <Input
                 placeholder="Write a description here.."
@@ -172,17 +206,19 @@ const Upload = ({navigation}) => {
                 onChangeText={onChange}
                 value={value}
                 autoCapitalize="none"
+                errorMessage={errors.description && errors.description.message}
               />
             )}
             name="description"
           />
           <Button title="Pick an image" onPress={pickFile} />
           <Button
+            loading={loading}
             disabled={!mediafile.uri}
             title="Upload"
             onPress={handleSubmit(uploadFile)}
           />
-          {loading && <ActivityIndicator size="large" />}
+          <Button title={'Reset'} onPress={resetForm} type="outline" />
         </Card>
       </TouchableOpacity>
     </ScrollView>

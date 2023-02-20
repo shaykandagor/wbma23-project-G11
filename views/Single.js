@@ -5,14 +5,21 @@ import {uploadsUrl} from '../utils/variables';
 
 const Single = ({route}) => {
   console.log(route.params);
-  const {title, description, filename, time_added: timeAdded} = route.params;
+  const {
+    title,
+    description,
+    filename,
+    time_added: timeAdded,
+    user_id: userId,
+  } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
       <Text>{title}</Text>
-      <Image style={styles.image} source={{uri: uploadsUrl + filename}} />
-      <Text>{timeAdded}</Text>
       <Text>{description}</Text>
+      <Image style={styles.image} source={{uri: uploadsUrl + filename}} />
+      <Text>uploaded at: {new Date(timeAdded).toLocaleString('fi-FI')}</Text>
+      <Text>by user: {userId}</Text>
     </SafeAreaView>
   );
 };

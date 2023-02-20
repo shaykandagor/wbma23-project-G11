@@ -1,10 +1,9 @@
 import React, {useContext} from 'react';
-import {Button, Text, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {Controller, useForm} from 'react-hook-form';
-import {Input} from '@rneui/base';
+import {Button, Card, Input} from '@rneui/themed';
 
 const LoginForm = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -22,7 +21,6 @@ const LoginForm = () => {
 
   const logIn = async (loginData) => {
     console.log('Login button pressed', loginData);
-    console.log('validate errors', errors);
     // const data = {username: 'shaynek', password: 'secret254'};
     // Used to save the data of the user as a token
     // So if the user logs in again the device has the user's data therefore a successfull login
@@ -39,8 +37,8 @@ const LoginForm = () => {
   };
 
   return (
-    <View>
-      <Text>Login Form</Text>
+    <Card>
+      <Card.Title>Login Form</Card.Title>
       <Controller
         control={control}
         rules={{
@@ -75,9 +73,8 @@ const LoginForm = () => {
         )}
         name="password"
       />
-
-      <Button title="Log in!" onPress={handleSubmit(logIn)} />
-    </View>
+      <Button title="LOG IN" onPress={handleSubmit(logIn)} />
+    </Card>
   );
 };
 
