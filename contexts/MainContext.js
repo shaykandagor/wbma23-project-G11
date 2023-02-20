@@ -10,8 +10,11 @@ const MainProvider = (props) => {
   //  Provides access to the values inside the content application wide in array format
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
+  const [update, setUpdate] = useState(true);
   return (
-    <MainContext.Provider value={{isLoggedIn, setIsLoggedIn, user, setUser}}>
+    <MainContext.Provider
+      value={{isLoggedIn, setIsLoggedIn, user, setUser, update, setUpdate}}
+    >
       {props.children}
     </MainContext.Provider>
   );
