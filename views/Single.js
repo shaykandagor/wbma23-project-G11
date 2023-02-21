@@ -1,7 +1,14 @@
-import React from 'react';
-import {StyleSheet, SafeAreaView, Text, Image} from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFavourite, useUser} from '../hooks/ApiHooks';
+import {Card, Icon, ListItem, Text} from '@rneui/themed';
+import {Video} from 'expo-av';
+import {MainContext} from '../contexts/MainContext';
+import {Modal, ScrollView} from 'react-native';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import {Image} from '@rneui/base';
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -11,32 +18,177 @@ const Single = ({route}) => {
     filename,
     time_added: timeAdded,
     user_id: userId,
+    media_type: type,
+    file_id: fileId,
   } = route.params;
 
+  const video = useRef(null);
+  const [owner, setOwner] = useState({});
+  const [likes, setLikes] = useState([]);
+  const [userLikesIt, setUserLikesIt] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const {user} = useContext(MainContext);
+  const {getUserById} = useUser();
+  const {getFavouritesByFileId, postFavourite, deleteFavourite} =
+    useFavourite();
+
+  const getOwner = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    const owner = await getUserById(userId, token);
+    console.log(owner);
+    setOwner(owner);
+  };
+
+  const getLikes = async () => {
+    const likes = await getFavouritesByFileId(fileId);
+    console.log('likes', likes, 'user', user);
+    setLikes(likes);
+    // checks if the current user id is included in the 'likes' array and
+    // set the 'userLikesIt' accordingly
+    for (const like of likes) {
+      if (like.user_id === user.user_id) {
+        setUserLikesIt(true);
+        break;
+      }
+    }
+  };
+
+  const likeFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await postFavourite(fileId, token);
+      setUserLikesIt(true);
+      getLikes();
+    } catch (error) {
+      // note: you cannot like same file multiple times
+      // console.log(error);
+    }
+  };
+  const dislikeFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await deleteFavourite(fileId, token);
+      setUserLikesIt(false);
+      getLikes();
+    } catch (error) {
+      // you cannot dislike same file multiple times
+      console.log(error);
+    }
+  };
+
+  const unlock = async () => {
+    try {
+      await ScreenOrientation.unlockAsync();
+    } catch (error) {
+      console.error('unlock', error.message);
+    }
+  };
+
+  const lock = async () => {
+    try {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      );
+    } catch (error) {
+      console.error('lock', error.message);
+    }
+  };
+
+  const showVideoInFullScreen = async () => {
+    try {
+      await video.current.presentFullscreenPlayer();
+    } catch (error) {
+      console.error('showVideoInFullScreen', error.message);
+    }
+  };
+
+  useEffect(() => {
+    getOwner();
+    getLikes();
+    unlock();
+
+    const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
+      console.log('orientation', evt);
+      if (evt.orientationInfo.orientation > 2) {
+        // show video in fullscreen
+        if (video.current) showVideoInFullScreen();
+      }
+    });
+
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(orientSub);
+      lock();
+    };
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>{title}</Text>
-      <Text>{description}</Text>
-      <Image style={styles.image} source={{uri: uploadsUrl + filename}} />
-      <Text>uploaded at: {new Date(timeAdded).toLocaleString('fi-FI')}</Text>
-      <Text>by user: {userId}</Text>
-    </SafeAreaView>
+    <>
+      <ScrollView>
+        <Card>
+          <Card.Title>{title}</Card.Title>
+          <Card.Divider />
+          {type === 'image' ? (
+            <Card.Image
+              onPress={() => setModalVisible(true)}
+              source={{uri: uploadsUrl + filename}}
+            />
+          ) : (
+            <Video
+              ref={video}
+              source={{uri: uploadsUrl + filename}}
+              style={{width: '100%', height: 200}}
+              resizeMode="cover"
+              useNativeControls
+              onError={(error) => {
+                console.log(error);
+              }}
+              isLooping
+            />
+          )}
+          <Card.Divider />
+          {description && (
+            <ListItem>
+              <Text>{description}</Text>
+            </ListItem>
+          )}
+          <ListItem>
+            <Icon name="schedule" />
+            <Text>{new Date(timeAdded).toLocaleString('fi-FI')}</Text>
+          </ListItem>
+          <ListItem>
+            <Icon name="person" />
+            <Text>
+              {owner.username} ({owner.full_name})
+            </Text>
+          </ListItem>
+          <ListItem>
+            {userLikesIt ? (
+              <Icon name="favorite" color="red" onPress={dislikeFile} />
+            ) : (
+              <Icon name="favorite-border" onPress={likeFile} />
+            )}
+            <Text>Total likes: {likes.length}</Text>
+          </ListItem>
+        </Card>
+      </ScrollView>
+      <Modal
+        visible={modalVisible}
+        style={{flex: 1}}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+        supportedOrientations={['portrait', 'landscape']}
+      >
+        <Image
+          resizeMode="contain"
+          onPress={() => setModalVisible(false)}
+          style={{height: '100%'}}
+          source={{uri: uploadsUrl + filename}}
+        />
+      </Modal>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 40,
-  },
-  image: {
-    width: 200,
-    height: 300,
-  },
-});
 
 Single.propTypes = {
   route: PropTypes.object,

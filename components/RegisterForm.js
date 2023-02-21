@@ -1,8 +1,7 @@
 import React from 'react';
-import {View} from 'react-native';
 import {useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
-import {Input, Button, Text} from '@rneui/themed';
+import {Input, Button, Card} from '@rneui/themed';
 
 const RegisterForm = () => {
   // const {setIsLoggedIn} = useContext(MainContext);
@@ -47,8 +46,8 @@ const RegisterForm = () => {
   };
 
   return (
-    <View>
-      <Text>Registration Form</Text>
+    <Card>
+      <Card.Title>Registration Form</Card.Title>
       <Controller
         control={control}
         rules={{
@@ -159,8 +158,8 @@ const RegisterForm = () => {
         )}
         name="confirmPassword"
       />
-      <Button title="Sign in!" onPress={handleSubmit(register)} />
-    </View>
+      <Button title="SIGN IN" onPress={handleSubmit(register)} />
+    </Card>
   );
 };
 

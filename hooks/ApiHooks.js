@@ -14,15 +14,18 @@ const doFetch = async (url, options) => {
   return json;
 };
 
-const useMedia = () => {
+const useMedia = (myFilesOnly) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {update} = useContext(MainContext);
+  const {update, user} = useContext(MainContext);
 
   const loadMedia = async () => {
     try {
-      // const response = await fetch(baseUrl + 'media');
-      // const json = await response.json();
-      const json = await useTag().getFilesByTag(appId);
+      let json = await useTag().getFilesByTag(appId);
+      // keep users files if MyFilesOnly
+      if (myFilesOnly) {
+        json = json.filter((file) => file.user_id === user.user_id);
+      }
+      json.reverse();
 
       const media = await Promise.all(
         json.map(async (file) => {
@@ -60,8 +63,34 @@ const useMedia = () => {
       throw new Error('postMedia: ' + error.message);
     }
   };
+  const deleteMedia = async (id, token) => {
+    try {
+      return await doFetch(baseUrl + 'media/' + id, {
+        headers: {'x-access-token': token},
+        method: 'delete',
+      });
+    } catch (error) {
+      throw new Error('deleteMedia, ' + error.message);
+    }
+  };
 
-  return {mediaArray, postMedia};
+  const putMedia = async (id, data, token) => {
+    const options = {
+      method: 'put',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(baseUrl + 'media/' + id, options);
+    } catch (error) {
+      throw new Error('putMedia: ' + error.message);
+    }
+  };
+
+  return {mediaArray, postMedia, deleteMedia, putMedia};
 };
 
 const useAuthentication = () => {
@@ -121,8 +150,17 @@ const useUser = () => {
       throw new Error('checkUsername: ' + error.message);
     }
   };
+  const getUserById = async (id, token) => {
+    try {
+      return await doFetch(baseUrl + 'users/' + id, {
+        headers: {'x-access-token': token},
+      });
+    } catch (error) {
+      throw new Error('getUserById, ' + error.message);
+    }
+  };
 
-  return {getUserByToken, postUser, checkUsername};
+  return {getUserByToken, postUser, checkUsername, getUserById};
 };
 
 const useTag = () => {
@@ -153,4 +191,52 @@ const useTag = () => {
   return {getFilesByTag, postTag};
 };
 
-export {useMedia, useAuthentication, useUser, useTag};
+const useFavourite = () => {
+  const postFavourite = async (fileId, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({file_id: fileId}),
+    };
+    try {
+      return await doFetch(baseUrl + 'favourites', options);
+    } catch (error) {
+      throw new Error('postFavourite: ' + error.message);
+    }
+  };
+  const getFavouritesByFileId = async (fileId) => {
+    try {
+      return await doFetch(baseUrl + 'favourites/file/' + fileId);
+    } catch (error) {
+      throw new Error('getFavouriterByFileId error, ' + error.message);
+    }
+  };
+  const getFavouritesByUser = async (token) => {
+    // TODO: implement this
+  };
+  const deleteFavourite = async (fileId, token) => {
+    const options = {
+      method: 'delete',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'favourites/file/' + fileId, options);
+    } catch (error) {
+      throw new Error('deleteFavourite error, ' + error.message);
+    }
+  };
+
+  return {
+    postFavourite,
+    getFavouritesByFileId,
+    getFavouritesByUser,
+    deleteFavourite,
+  };
+};
+
+export {useMedia, useAuthentication, useUser, useTag, useFavourite};

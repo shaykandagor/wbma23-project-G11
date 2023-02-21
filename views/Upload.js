@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card, Input} from '@rneui/themed';
 import {Controller, useForm} from 'react-hook-form';
@@ -9,9 +9,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
 import {appId} from '../utils/variables';
+import {Video} from 'expo-av';
 
 const Upload = ({navigation}) => {
   const [mediafile, setMediafile] = useState({});
+  const video = useRef(null);
   // Loading is true the Activity Indicator is visible
   // Loading is false the Activity Indicator is hidden
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,7 @@ const Upload = ({navigation}) => {
     },
   });
 
-  // This function enales the user to upload a file with its info
+  // This function enables the user to upload a file with its info
   const uploadFile = async (data) => {
     //  Creates form data and posts it
     setLoading(true);
@@ -122,12 +124,23 @@ const Upload = ({navigation}) => {
     }, [])
   );
 
+  console.log('tupe', mediafile.type);
+
   return (
     <ScrollView>
       <TouchableOpacity onPress={() => Keyboard.dismiss()} activeOpacity={1}>
         <Card>
           {mediafile.type === 'video' ? (
-            <Card.Title>Video</Card.Title>
+            <Video
+              ref={video}
+              source={{uri: mediafile.uri}}
+              style={{width: '100%', height: 200}}
+              resizeMode="cover"
+              useNativeControls
+              onError={(error) => {
+                console.log(error);
+              }}
+            />
           ) : (
             <Card.Image
               source={{
@@ -205,7 +218,6 @@ const Upload = ({navigation}) => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                autoCapitalize="none"
                 errorMessage={errors.description && errors.description.message}
               />
             )}
