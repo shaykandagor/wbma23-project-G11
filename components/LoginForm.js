@@ -3,7 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {Controller, useForm} from 'react-hook-form';
-import {Button, Card, Input} from '@rneui/themed';
+import {Button, Card, Image, Input} from '@rneui/themed';
+import {View, StyleSheet} from 'react-native';
+import colors from '../config/colors';
 
 const LoginForm = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -37,45 +39,67 @@ const LoginForm = () => {
   };
 
   return (
-    <Card>
-      <Card.Title>Login Form</Card.Title>
-      <Controller
-        control={control}
-        rules={{
-          required: {value: true, message: 'Username is required.'},
-        }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <Input
-            placeholder="Username"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            autoCapitalize="none"
-            errorMessage={errors.username && errors.username.message}
-          />
-        )}
-        name="username"
-      />
-      <Controller
-        control={control}
-        rules={{
-          required: {value: true, message: 'Password is required'},
-        }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <Input
-            placeholder="Password"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            secureTextEntry={true}
-            errorMessage={errors.password && errors.password.message}
-          />
-        )}
-        name="password"
-      />
-      <Button title="LOG IN" onPress={handleSubmit(logIn)} />
-    </Card>
+    <View style={styles.container}>
+      <Card>
+        <Card.Title>RENEW</Card.Title>
+        <Image
+          style={styles.logo}
+          source={require('../assets/renewlogo.jpg')}
+        />
+        <Controller
+          control={control}
+          rules={{
+            required: {value: true, message: 'Username is required.'},
+          }}
+          render={({field: {onChange, onBlur, value}}) => (
+            <Input
+              placeholder="Username"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              autoCapitalize="none"
+              errorMessage={errors.username && errors.username.message}
+            />
+          )}
+          name="username"
+        />
+        <Controller
+          control={control}
+          rules={{
+            required: {value: true, message: 'Password is required'},
+          }}
+          render={({field: {onChange, onBlur, value}}) => (
+            <Input
+              placeholder="Password"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              secureTextEntry={true}
+              errorMessage={errors.password && errors.password.message}
+            />
+          )}
+          name="password"
+        />
+        <Button
+          title="LOG IN"
+          onPress={handleSubmit(logIn)}
+          color={colors.secondary}
+        />
+      </Card>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.lightgray,
+  },
+  logo: {
+    width: 300,
+    height: 250,
+    justifyContent: 'center',
+  },
+});
 
 export default LoginForm;
