@@ -1,18 +1,23 @@
 import React, {useContext, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card, Input} from '@rneui/themed';
+import {Button, Card} from '@rneui/themed';
+import Input from 'react-native-input-style';
 import {Controller, useForm} from 'react-hook-form';
 import {
   ActivityIndicator,
   Keyboard,
   ScrollView,
   TouchableOpacity,
+  StyleSheet,
+  View,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
+import colors from '../config/colors';
+import {SelectList} from 'react-native-dropdown-select-list';
 
 const Upload = ({navigation}) => {
   const [mediafile, setMediafile] = useState({});
@@ -99,14 +104,39 @@ const Upload = ({navigation}) => {
     }
   };
 
+  const [/* selected,*/ setSelected] = React.useState('');
+
+  const category1 = [
+    {key: '1', value: 'Women'},
+    {key: '2', value: 'Men'},
+    {key: '3', value: 'Kids'},
+  ];
+  const category2 = [
+    {key: '1', value: 'Clothes'},
+    {key: '2', value: 'Shoes'},
+    {key: '3', value: 'Aceessories'},
+  ];
+  const category3 = [
+    {key: '1', value: 'Baby'},
+    {key: '2', value: '1-2years'},
+    {key: '3', value: '2-3years'},
+    {key: '4', value: '3-4years'},
+    {key: '5', value: '4-5years'},
+    {key: '6', value: '6-7years'},
+    {key: '7', value: '7-9years'},
+    {key: '8', value: '9-11years'},
+    {key: '9', value: '11-13years'},
+    {key: '10', value: '13-15years'},
+    {key: '11', value: '15-17years'},
+  ];
   return (
-    <ScrollView>
+    <ScrollView style={[styles.wholeview]}>
       <TouchableOpacity
         onPress={() => Keyboard.dismiss()}
         style={{flex: 1}}
         activeOpacity={1}
       >
-        <Card>
+        <View style={[styles.card, styles.shadowProp]}>
           <Card.Image
             source={{
               uri: mediafile.uri || 'https://picsum.photos/id/237/200/300',
@@ -146,6 +176,45 @@ const Upload = ({navigation}) => {
             )}
             name="size"
           /> */}
+          <SelectList
+            setSelected={(val) => setSelected(val)}
+            data={category1}
+            save="value"
+            placeholder="Select Category"
+            search={false}
+            boxStyles={{
+              marginHorizontal: 14,
+              marginVertical: 8,
+              borderRadius: 5,
+              backgroundColor: colors.secondary,
+            }}
+          />
+          <SelectList
+            setSelected={(val) => setSelected(val)}
+            data={category2}
+            save="value"
+            placeholder="Select Category"
+            search={false}
+            boxStyles={{
+              marginHorizontal: 14,
+              marginVertical: 8,
+              borderRadius: 5,
+              backgroundColor: colors.secondary,
+            }}
+          />
+          <SelectList
+            setSelected={(val) => setSelected(val)}
+            data={category3}
+            save="value"
+            placeholder="Select Size"
+            search={false}
+            boxStyles={{
+              marginHorizontal: 14,
+              marginVertical: 8,
+              borderRadius: 5,
+              backgroundColor: colors.secondary,
+            }}
+          />
           <Controller
             control={control}
             rules={{
@@ -153,12 +222,15 @@ const Upload = ({navigation}) => {
             }}
             render={({field: {onChange, onBlur, value}}) => (
               <Input
-                placeholder="Write a title here.."
+                label="Title"
+                labelStyle={{backgroundColor: colors.lightgray}}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 autoCapitalize="none"
                 errorMessage={errors.title && errors.title.message}
+                outlined
+                borderColor={colors.secondary}
               />
             )}
             name="title"
@@ -167,27 +239,67 @@ const Upload = ({navigation}) => {
             control={control}
             render={({field: {onChange, onBlur, value}}) => (
               <Input
-                placeholder="Write a description here.."
+                label="Write a description here.."
+                labelStyle={{backgroundColor: colors.lightgray}}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 autoCapitalize="none"
+                outlined
+                borderColor={colors.secondary}
               />
             )}
             name="description"
           />
-          <Button title="Pick an image" onPress={pickFile} />
+
           <Button
+            title="Pick an image"
+            onPress={pickFile}
+            buttonStyle={{
+              backgroundColor: colors.secondary,
+              borderRadius: 5,
+              margin: 14,
+            }}
+            containerViewStyle={{
+              borderRadius: 20,
+              elevation: 15,
+            }}
+          />
+          <Button
+            buttonStyle={{
+              backgroundColor: colors.secondary,
+              borderRadius: 5,
+              margin: 14,
+            }}
+            containerViewStyle={{
+              borderRadius: 20,
+              elevation: 15,
+            }}
             disabled={!mediafile.uri}
             title="Upload"
             onPress={handleSubmit(uploadFile)}
           />
           {loading && <ActivityIndicator size="large" />}
-        </Card>
+        </View>
       </TouchableOpacity>
     </ScrollView>
   );
 };
+const styles = StyleSheet.create({
+  wholeview: {
+    backgroundColor: 'white',
+  },
+  card: {
+    backgroundColor: colors.lightgray,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: '90%',
+    marginVertical: 10,
+    marginHorizontal: 14,
+    marginRight: 14,
+  },
+});
 
 Upload.propTypes = {
   navigation: PropTypes.object,

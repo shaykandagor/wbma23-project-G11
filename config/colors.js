@@ -1,5 +1,5 @@
 export default {
-  lightgray: '#D9D9D9',
+  lightgray: '#E7EEE8',
   primary: '',
   secondary: '#719898',
   black: '#000',
