@@ -24,11 +24,26 @@
     "react": "18.1.0",
     "react-hook-form": "^7.43.1",
     "react-native": "0.70.5",
+<<<<<<< HEAD
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-element-dropdown": "^2.6.0",
     "react-native-input-style": "^1.0.2",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "~3.18.0"
+=======
+<<<<<<< HEAD
+    "react-native-elements": "^3.4.3",
+    "react-native-safe-area-context": "^4.4.1",
+    "react-native-screens": "~3.18.0",
+    "react-native-vector-icons": "^9.2.0"
+=======
+    "react-native-safe-area-context": "^4.4.1",
+    "react-native-screens": "~3.18.0",
+    "expo-image-picker": "~14.0.2",
+    "expo-av": "~13.0.2",
+    "expo-screen-orientation": "~5.0.1"
+>>>>>>> 368ca337e04fd8df5bad1a2925541de9b128cb52
+>>>>>>> 6aff4f1f7ed5fc947c8cacc7f906252f6e604afb
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

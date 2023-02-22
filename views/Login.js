@@ -13,6 +13,7 @@ import {useUser} from '../hooks/ApiHooks';
 import {Button, Text} from '@rneui/themed';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import colors from '../config/colors';
 
 // Login function is called when the login button is pressed
 const Login = ({navigation}) => {
@@ -57,6 +58,7 @@ const Login = ({navigation}) => {
             onPress={() => {
               setToggleForm(!toggleForm);
             }}
+            color={colors.secondary}
           />
         </KeyboardAvoidingView>
       </TouchableOpacity>
@@ -67,6 +69,7 @@ const Login = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    backgroundColor: colors.lightgray,
   },
 });
 
