@@ -1,10 +1,12 @@
+import {Image, Text} from '@rneui/themed';
 import React from 'react';
-import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import colors from '../config/colors';
+import PropTypes from 'prop-types';
 
-function WelcomeScreen(props) {
+function WelcomeScreen({navigation}) {
   return (
-    <ImageBackground
+    <Image
       style={styles.background}
       source={require('../assets/welcome_img.jpeg')}
     >
@@ -21,7 +23,7 @@ function WelcomeScreen(props) {
       <View style={styles.loginButton}>
         <Text>Sign In</Text>
       </View>
-    </ImageBackground>
+    </Image>
   );
 }
 
@@ -51,5 +53,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+WelcomeScreen.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default WelcomeScreen;
