@@ -54,6 +54,7 @@ const Login = ({navigation}) => {
             {toggleForm ? 'No account yet?' : 'Already have an account?'}
           </Text>
           <Button
+            type="clear"
             title={toggleForm ? 'Register' : 'Login'}
             onPress={() => {
               setToggleForm(!toggleForm);
