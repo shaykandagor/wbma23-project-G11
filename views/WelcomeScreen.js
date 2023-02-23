@@ -1,31 +1,60 @@
-import {Image, Text} from '@rneui/themed';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import colors from '../config/colors';
 import PropTypes from 'prop-types';
+import colors from '../config/colors';
+import {Button, Image, Text} from '@rneui/themed';
+import {
+  ImageBackground,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+} from 'react-native';
 
-function WelcomeScreen({navigation}) {
+const WelcomeScreen = ({navigation}) => {
+  const handleRegistrationPress = () => {
+    navigation.navigate('Login');
+  };
+
+  const handleLoginPress = () => {
+    navigation.navigate('Login');
+  };
+
   return (
-    <Image
+    <ImageBackground
       style={styles.background}
-      source={require('../assets/welcome_img.jpeg')}
+      resizeMode="cover"
+      source={require('../assets/welcome.jpg')}
     >
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
           source={require('../assets/renewlogo.jpg')}
-        />
-        <Text color="white">Giving Second Home to Great Stuff</Text>
+        ></Image>
+        <Text style={styles.logoText}>Giving Second Home to Great Stuff</Text>
       </View>
-      <View style={styles.registerButton}>
-        <Text>Create an account</Text>
-      </View>
-      <View style={styles.loginButton}>
-        <Text>Sign In</Text>
-      </View>
-    </Image>
+      <TouchableOpacity
+        style={styles.registerButton}
+        onPress={handleRegistrationPress}
+      >
+        <Button
+          title="CREATE AN ACCOUNT"
+          color={colors.secondary}
+          style={styles.buttonText}
+        ></Button>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLoginPress}>
+        <Button
+          title="LOG IN IF YOU HAVE AN ACCOUNT"
+          color={colors.secondary}
+          style={styles.buttonText}
+        ></Button>
+      </TouchableOpacity>
+    </ImageBackground>
   );
-}
+};
+
+WelcomeScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   background: {
@@ -33,29 +62,38 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  loginButton: {
-    width: '100%',
-    height: 70,
-    backgroundColor: colors.lightgray,
+  logoContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    top: 100,
+  },
+  logo: {
+    width: 250,
+    height: 200,
+  },
+  logoText: {
+    color: colors.black,
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   registerButton: {
     width: '100%',
     height: 70,
-    backgroundColor: colors.secondary,
-  },
-  logo: {
-    width: 150,
-    height: 100,
-  },
-  logoContainer: {
-    position: 'absolute',
-    top: 150,
+    justifyContent: 'center',
     alignItems: 'center',
   },
+  loginButton: {
+    width: '100%',
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
 });
-
-WelcomeScreen.propTypes = {
-  navigation: PropTypes.object,
-};
 
 export default WelcomeScreen;

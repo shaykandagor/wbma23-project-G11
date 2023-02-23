@@ -8,10 +8,11 @@ import Profile from '../views/Profile';
 import Upload from '../views/Upload';
 import Search from '../views/Search';
 import Single from '../views/Single';
-import Login from '../views/Login';
+import WelcomeScreen from '../views/WelcomeScreen';
 import {Icon} from '@rneui/themed';
 import MyFiles from '../views/MyFiles';
 import Modify from '../views/Modify';
+import Login from '../views/Login';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -70,7 +71,13 @@ const StackScreen = () => {
           <Stack.Screen name="Modify" component={Modify} />
         </>
       ) : (
-        <Stack.Screen name="Login" component={Login}></Stack.Screen>
+        <>
+          <Stack.Screen
+            name="Welcome Screen"
+            component={WelcomeScreen}
+          ></Stack.Screen>
+          <Stack.Screen name="Login" component={Login} />
+        </>
       )}
     </Stack.Navigator>
   );
