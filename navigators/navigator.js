@@ -14,52 +14,56 @@ import MyFiles from '../views/MyFiles';
 import Modify from '../views/Modify';
 import Login from '../views/Login';
 
+// Create the bottom tab navigator
 const Tab = createBottomTabNavigator();
+
+// Create the native stack navigator
 const Stack = createNativeStackNavigator();
 
+// Returns the options object for each tab screen
+const getTabScreenOptions = (iconName) => {
+  return {
+    tabBarIcon: ({color}) => <Icon name={iconName} color={color} />,
+  };
+};
+
+// Component for the tab navigator
 const TabScreen = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen
         name="Home"
         component={Home}
-        options={{
-          tabBarIcon: ({color}) => <Icon name="home" color={color} />,
-        }}
+        options={getTabScreenOptions('home')}
       />
       <Tab.Screen
         name="Upload"
         component={Upload}
-        options={{
-          tabBarIcon: ({color}) => <Icon name="cloud-upload" color={color} />,
-        }}
+        options={getTabScreenOptions('cloud-upload')}
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
-        options={{
-          tabBarIcon: ({color}) => <Icon name="person" color={color} />,
-        }}
+        options={getTabScreenOptions('person')}
       />
       <Tab.Screen
         name="Search"
         component={Search}
-        options={{
-          tabBarIcon: ({color}) => <Icon name="search" color={color} />,
-        }}
+        options={getTabScreenOptions('search')}
       />
     </Tab.Navigator>
   );
 };
 
+// Component for the stack navigator
 const StackScreen = () => {
-  // Conditional rendering: True -> Displays home screen when a user has logged in successfully
-  // False -> Displays login screen when the user has not logged in
-  // To access the values from the main provider(parent) useContext hook is used
+  // Get the isLoggedIn value from the MainContext
   const {isLoggedIn} = useContext(MainContext);
-  return (
-    <Stack.Navigator>
-      {isLoggedIn ? (
+
+  // Function that returns the screens to be rendered based on the isLoggedIn value
+  const getScreens = () => {
+    if (isLoggedIn) {
+      return (
         <>
           <Stack.Screen
             name="Tabs"
@@ -70,19 +74,21 @@ const StackScreen = () => {
           <Stack.Screen name="MyFiles" component={MyFiles} />
           <Stack.Screen name="Modify" component={Modify} />
         </>
-      ) : (
+      );
+    } else {
+      return (
         <>
-          <Stack.Screen
-            name="Welcome Screen"
-            component={WelcomeScreen}
-          ></Stack.Screen>
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Login" component={Login} />
         </>
-      )}
-    </Stack.Navigator>
-  );
+      );
+    }
+  };
+
+  return <Stack.Navigator>{getScreens()}</Stack.Navigator>;
 };
 
+// Component for the navigation container
 const Navigator = () => {
   return (
     <NavigationContainer>

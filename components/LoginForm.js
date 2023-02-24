@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {Controller, useForm} from 'react-hook-form';
-import {Button, Card, Image, Input} from '@rneui/themed';
+import {Button, Card, Input} from '@rneui/themed';
 import {View, StyleSheet} from 'react-native';
 import colors from '../config/colors';
 
@@ -42,10 +42,7 @@ const LoginForm = () => {
     <View style={styles.container}>
       <Card>
         <Card.Title>RENEW</Card.Title>
-        <Image
-          style={styles.logo}
-          source={require('../assets/renewlogo.jpg')}
-        />
+
         <Controller
           control={control}
           rules={{
@@ -93,12 +90,6 @@ const LoginForm = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.lightgray,
-  },
-  logo: {
-    width: 300,
-    height: 250,
-    justifyContent: 'center',
   },
 });
 

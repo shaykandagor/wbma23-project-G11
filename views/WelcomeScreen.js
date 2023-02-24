@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import colors from '../config/colors';
 import {Button, Image, Text} from '@rneui/themed';
@@ -8,14 +8,17 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+import {MainContext} from '../contexts/MainContext';
 
 const WelcomeScreen = ({navigation}) => {
+  const {isLoggedIn} = useContext(MainContext);
+  console.log(isLoggedIn);
   const handleRegistrationPress = () => {
-    navigation.navigate('Login');
+    navigation.navigate('Login', {register: false});
   };
 
   const handleLoginPress = () => {
-    navigation.navigate('Login');
+    navigation.navigate('Login', {register: true});
   };
 
   return (
@@ -31,29 +34,24 @@ const WelcomeScreen = ({navigation}) => {
         ></Image>
         <Text style={styles.logoText}>Giving Second Home to Great Stuff</Text>
       </View>
-      <TouchableOpacity
-        style={styles.registerButton}
-        onPress={handleRegistrationPress}
-      >
+      <TouchableOpacity style={styles.registerButton}>
         <Button
           title="CREATE AN ACCOUNT"
           color={colors.secondary}
           style={styles.buttonText}
+          onPress={handleRegistrationPress}
         ></Button>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginButton} onPress={handleLoginPress}>
+      <TouchableOpacity style={styles.loginButton}>
         <Button
           title="LOG IN IF YOU HAVE AN ACCOUNT"
           color={colors.secondary}
           style={styles.buttonText}
+          onPress={handleLoginPress}
         ></Button>
       </TouchableOpacity>
     </ImageBackground>
   );
-};
-
-WelcomeScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -95,5 +93,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+WelcomeScreen.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default WelcomeScreen;

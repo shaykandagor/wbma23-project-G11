@@ -1,7 +1,7 @@
 import React from 'react';
 import {useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
-import {Input, Button, Card, Image} from '@rneui/themed';
+import {Input, Button, Card} from '@rneui/themed';
 import {View, StyleSheet} from 'react-native';
 import colors from '../config/colors';
 
@@ -51,10 +51,6 @@ const RegisterForm = () => {
     <View style={styles.container}>
       <Card>
         <Card.Title>RENEW</Card.Title>
-        <Image
-          style={styles.logo}
-          source={require('../assets/renewlogo.jpg')}
-        />
         <Controller
           control={control}
           rules={{
@@ -180,9 +176,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightgray,
   },
   logo: {
-    width: 300,
-    height: 250,
-    justifyContent: 'center',
+    width: 250,
+    height: 200,
   },
 });
 
