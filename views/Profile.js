@@ -31,7 +31,14 @@ const Profile = ({navigation}) => {
     <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Title>{user.username}</Card.Title>
-        <Card.Image style={styles.avatar} source={{uri: uploadsUrl + avatar}} />
+        <Card.Divider />
+        <View style={{position: 'relative', alignItems: 'center'}}>
+          <Card.Image
+            style={styles.avatar}
+            source={{uri: uploadsUrl + avatar}}
+          />
+        </View>
+
         <ListItem>
           <Icon name="badge" />
           <ListItem.Title>{user.full_name}</ListItem.Title>
@@ -80,9 +87,10 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
+    alignSelf: 'center',
   },
   card: {
-    alignItems: 'center',
+    flexDirection: 'column',
   },
 });
 
