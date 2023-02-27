@@ -5,6 +5,8 @@ import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 import {Button, Icon, Card, ListItem} from '@rneui/themed';
 import PropTypes from 'prop-types';
+import {StyleSheet, View} from 'react-native';
+import colors from '../config/colors';
 
 const Profile = ({navigation}) => {
   const {getFilesByTag} = useTag();
@@ -26,44 +28,63 @@ const Profile = ({navigation}) => {
   }, []);
 
   return (
-    <Card>
-      <Card.Title>{user.username}</Card.Title>
-      <Card.Image source={{uri: uploadsUrl + avatar}} />
-      <ListItem>
-        <Icon name="badge" />
-        <ListItem.Title>{user.full_name}</ListItem.Title>
-      </ListItem>
-      <ListItem>
-        <Icon name="person" />
-        <ListItem.Title>{user.username}</ListItem.Title>
-      </ListItem>
-      <ListItem>
-        <Icon name="email" />
-        <ListItem.Title>{user.email}</ListItem.Title>
-      </ListItem>
-      <Button
-        title="Logout!"
-        onPress={async () => {
-          console.log('Logging out!');
-          setUser({});
-          setIsLoggedIn(false);
-          // Clears the users data from asyncstorage when the user logs out
-          try {
-            await AsyncStorage.clear();
-          } catch (error) {
-            console.error('Clearing asyncstorage failed');
-          }
-        }}
-      />
-      <Button
-        title="My Files"
-        onPress={() => {
-          navigation.navigate('MyFiles');
-        }}
-      />
-    </Card>
+    <View style={styles.container}>
+      <Card style={styles.card}>
+        <Card.Title>{user.username}</Card.Title>
+        <Card.Image style={styles.avatar} source={{uri: uploadsUrl + avatar}} />
+        <ListItem>
+          <Icon name="badge" />
+          <ListItem.Title>{user.full_name}</ListItem.Title>
+        </ListItem>
+        <ListItem>
+          <Icon name="person" />
+          <ListItem.Title>{user.username}</ListItem.Title>
+        </ListItem>
+        <ListItem>
+          <Icon name="email" />
+          <ListItem.Title>{user.email}</ListItem.Title>
+        </ListItem>
+        <Button
+          title="Logout!"
+          color={colors.secondary}
+          onPress={async () => {
+            console.log('Logging out!');
+            setUser({});
+            setIsLoggedIn(false);
+            // Clears the users data from asyncstorage when the user logs out
+            try {
+              await AsyncStorage.clear();
+            } catch (error) {
+              console.error('Clearing asyncstorage failed');
+            }
+          }}
+        />
+        <Button
+          title="My Files"
+          color={colors.secondary}
+          onPress={() => {
+            navigation.navigate('MyFiles');
+          }}
+        />
+      </Card>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.lightgreen,
+  },
+  avatar: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+  },
+  card: {
+    alignItems: 'center',
+  },
+});
 
 Profile.propTypes = {
   navigation: PropTypes.object,

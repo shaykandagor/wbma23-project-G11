@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import colors from '../config/colors';
 import {Button, Image, Text} from '@rneui/themed';
@@ -9,8 +9,12 @@ import {
   StyleSheet,
 } from 'react-native';
 import {MainContext} from '../contexts/MainContext';
+import {useUser} from '../hooks/ApiHooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const WelcomeScreen = ({navigation}) => {
+const WelcomeScreen = ({navigation, route}) => {
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
+  const {getUserByToken} = useUser();
   const {isLoggedIn} = useContext(MainContext);
   console.log(isLoggedIn);
   const handleRegistrationPress = () => {
@@ -20,6 +24,25 @@ const WelcomeScreen = ({navigation}) => {
   const handleLoginPress = () => {
     navigation.navigate('Login', {register: true});
   };
+
+  // Saves the value of userToken saved in AsyncStorage as userToken
+  const checkToken = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      // If no there is no token available, do nothing
+      if (userToken === null) return;
+      const userData = await getUserByToken(userToken);
+      console.log('checkToken', userData);
+      setUser(userData);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error('checkToken', error);
+    }
+  };
+
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   return (
     <ImageBackground
@@ -96,6 +119,7 @@ const styles = StyleSheet.create({
 
 WelcomeScreen.propTypes = {
   navigation: PropTypes.object,
+  route: PropTypes.object,
 };
 
 export default WelcomeScreen;

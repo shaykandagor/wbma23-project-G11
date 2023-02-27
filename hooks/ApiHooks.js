@@ -90,7 +90,23 @@ const useMedia = (myFilesOnly) => {
     }
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia};
+  const searchMedia = async (data, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(baseUrl + 'media/search' + options);
+    } catch (error) {
+      throw new Error('searchMedia: ' + error.message);
+    }
+  };
+
+  return {mediaArray, postMedia, deleteMedia, putMedia, searchMedia};
 };
 
 const useAuthentication = () => {
