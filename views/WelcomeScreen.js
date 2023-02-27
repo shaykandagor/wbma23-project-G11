@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    width: '100%',
   },
   logoContainer: {
     position: 'absolute',
