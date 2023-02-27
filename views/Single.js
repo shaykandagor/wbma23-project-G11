@@ -1,14 +1,12 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet, Image, View, ScreenOrientation} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
+import {Card, Text, Icon, Button} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
-import {Card, Icon, ListItem, Text} from '@rneui/themed';
-import {Video} from 'expo-av';
 import {MainContext} from '../contexts/MainContext';
-import {Modal, ScrollView} from 'react-native';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import {Image} from '@rneui/base';
+import {ListItem} from '@rneui/themed';
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -107,13 +105,13 @@ const Single = ({route}) => {
     getLikes();
     unlock();
 
-    const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
-      console.log('orientation', evt);
-      if (evt.orientationInfo.orientation > 2) {
-        // show video in fullscreen
-        if (video.current) showVideoInFullScreen();
-      }
-    });
+    // const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
+    //   console.log('orientation', evt);
+    //   if (evt.orientationInfo.orientation > 2) {
+    //     // show video in fullscreen
+    //     if (video.current) showVideoInFullScreen();
+    //   }
+    // });
 
     return () => {
       ScreenOrientation.removeOrientationChangeListener(orientSub);
@@ -122,73 +120,101 @@ const Single = ({route}) => {
   }, []);
 
   return (
-    <>
-      <ScrollView>
-        <Card>
-          <Card.Title>{title}</Card.Title>
-          <Card.Divider />
-          {type === 'image' ? (
-            <Card.Image
-              onPress={() => setModalVisible(true)}
-              source={{uri: uploadsUrl + filename}}
-            />
-          ) : (
-            <Video
-              ref={video}
-              source={{uri: uploadsUrl + filename}}
-              style={{width: '100%', height: 200}}
-              resizeMode="cover"
-              useNativeControls
-              onError={(error) => {
-                console.log(error);
-              }}
-              isLooping
-            />
-          )}
-          <Card.Divider />
-          {description && (
-            <ListItem>
-              <Text>{description}</Text>
-            </ListItem>
-          )}
-          <ListItem>
-            <Icon name="schedule" />
-            <Text>{new Date(timeAdded).toLocaleString('fi-FI')}</Text>
-          </ListItem>
-          <ListItem>
-            <Icon name="person" />
-            <Text>
-              {owner.username} ({owner.full_name})
-            </Text>
-          </ListItem>
-          <ListItem>
-            {userLikesIt ? (
-              <Icon name="favorite" color="red" onPress={dislikeFile} />
-            ) : (
-              <Icon name="favorite-border" onPress={likeFile} />
-            )}
-            <Text>Total likes: {likes.length}</Text>
-          </ListItem>
-        </Card>
-      </ScrollView>
-      <Modal
-        visible={modalVisible}
-        style={{flex: 1}}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-        supportedOrientations={['portrait', 'landscape']}
-      >
-        <Image
-          resizeMode="contain"
-          onPress={() => setModalVisible(false)}
-          style={{height: '100%'}}
-          source={{uri: uploadsUrl + filename}}
+    <Card>
+      <Image style={styles.itemImage} source={{uri: uploadsUrl + filename}} />
+      <View style={styles.categoryContainer}>
+        <Text style={styles.categoryText}>Women</Text>
+        <Text style={styles.categoryText}>Size 38</Text>
+        <Text style={styles.categoryText}>Trousers</Text>
+      </View>
+      <Text style={styles.itemName}>{title}</Text>
+      <ListItem>
+        {userLikesIt ? (
+          <Icon name="favorite" color="red" onPress={dislikeFile} />
+        ) : (
+          <Icon name="favorite-border" onPress={likeFile} />
+        )}
+        <Text>Total likes: {likes.length}</Text>
+      </ListItem>
+
+      <Text style={styles.itemPrice}>$100</Text>
+      <Text style={styles.itemLocation}>Location</Text>
+      <Text style={styles.itemDescription}>{description}</Text>
+      <View style={styles.sellerInfoContainer}>
+        <Text style={styles.sellerName}>Seller Name</Text>
+        <Icon
+          name="shopping-bag"
+          type="font-awesome"
+          color="#517fa4"
+          style={styles.shoppingBagIcon}
         />
-      </Modal>
-    </>
+        <Text style={styles.sellerItemsCount}>20</Text>
+      </View>
+      <Text style={styles.postedDate}>{timeAdded}</Text>
+      <Button
+        icon={<Icon name="envelope" type="font-awesome" color="#ffffff" />}
+        title="Send message"
+      />
+    </Card>
   );
 };
+
+const styles = StyleSheet.create({
+  itemImage: {
+    width: '100%',
+    height: 200,
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  categoryText: {
+    color: '#517fa4',
+    fontWeight: 'bold',
+  },
+  itemName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  heartIcon: {
+    position: 'absolute',
+    right: 0,
+    top: 10,
+  },
+  itemPrice: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#f50',
+    marginTop: 10,
+  },
+  itemLocation: {
+    color: '#517fa4',
+    marginTop: 10,
+  },
+  itemDescription: {
+    marginTop: 10,
+  },
+  sellerInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  sellerName: {
+    fontWeight: 'bold',
+  },
+  shoppingBagIcon: {
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  sellerItemsCount: {
+    color: '#517fa4',
+  },
+  postedDate: {
+    color: '#517fa4',
+    marginTop: 10,
+  },
+});
 
 Single.propTypes = {
   route: PropTypes.object,
