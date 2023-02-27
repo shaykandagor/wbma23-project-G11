@@ -100,8 +100,9 @@ const useMedia = (myFilesOnly) => {
       body: JSON.stringify(data),
     };
     try {
-      return await doFetch(baseUrl + 'media/search' + options);
+      return await doFetch(baseUrl + 'media/search', options);
     } catch (error) {
+      console.log(error);
       throw new Error('searchMedia: ' + error.message);
     }
   };
