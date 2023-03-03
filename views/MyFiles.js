@@ -1,12 +1,13 @@
 import List from '../components/List';
 import PropTypes from 'prop-types';
 import {View, StyleSheet} from 'react-native';
-import {Button, Card} from '@rneui/themed';
+import {Button, Card, Text} from '@rneui/themed';
 import colors from '../config/colors';
 import {useContext, useEffect, useState} from 'react';
 import {useTag} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {uploadsUrl} from '../utils/variables';
+import {ScrollView} from 'react-native';
 
 const MyFiles = ({navigation}) => {
   const {getFilesByTag} = useTag();
@@ -32,17 +33,33 @@ const MyFiles = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
-        <Card.Title>{user.username}</Card.Title>
+        <Card.Title>My Profile</Card.Title>
+        <Card.Divider />
         <Card.Image style={styles.avatar} source={{uri: uploadsUrl + avatar}} />
+        <Text style={styles.text}>{user.username}</Text>
+        <Card.Divider />
         <Button
-          title="Edit Profile"
-          color={colors.secondary}
+          title="EDIT PROFILE"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderRadius: 5,
+          }}
+          titleStyle={{fontWeight: 'bold', fontSize: 15}}
+          containerStyle={{
+            marginHorizontal: 50,
+            height: 50,
+            width: 200,
+            marginVertical: 10,
+          }}
           onPress={() => {
-            navigation.navigate('Profile');
+            navigation.navigate('UpdateUser');
           }}
         />
       </Card>
-      <List navigation={navigation} myFilesOnly={true} />
+      <Card.Divider />
+      <ScrollView>
+        <List navigation={navigation} myFilesOnly={true} />
+      </ScrollView>
     </View>
   );
 };
@@ -58,6 +75,9 @@ const styles = StyleSheet.create({
   },
   card: {
     alignItems: 'center',
+  },
+  text: {
+    alignItems: 'flex-end',
   },
 });
 

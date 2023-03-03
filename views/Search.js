@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Button, Card, Image, Input, Text} from '@rneui/themed';
+import {Button, Card, Image, Input, ListItem, Text} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {
@@ -14,11 +14,13 @@ import {useMedia} from '../hooks/ApiHooks';
 import moment from 'moment';
 import {uploadsUrl} from '../utils/variables';
 import PropTypes from 'prop-types';
+import {ActivityIndicator} from 'react-native';
 
 //
 const Search = ({navigation}) => {
   const [search, setSearch] = useState([]);
   const {searchMedia} = useMedia();
+  const [loading, setLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -31,6 +33,7 @@ const Search = ({navigation}) => {
   });
 
   const searchItem = async (searchData) => {
+    setLoading(true);
     const userToken = await AsyncStorage.getItem('userToken');
     const {title} = searchData;
     // console.log('Search button pressed', {title});
@@ -38,13 +41,14 @@ const Search = ({navigation}) => {
       const searchResult = await searchMedia({title}, userToken);
       // console.log('searchItem', searchResult);
       setSearch(searchResult);
+      setLoading(false);
     } catch (error) {
       console.error('searchItem', error);
     }
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <KeyboardAvoidingView>
         <Card>
           <Card.Title> Search for an item</Card.Title>
@@ -69,10 +73,23 @@ const Search = ({navigation}) => {
             name="title"
           />
           <Button
-            title="Search"
+            title="SEARCH"
+            buttonStyle={{
+              backgroundColor: colors.secondary,
+              borderWidth: 0,
+              borderColor: 'transparent',
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 350,
+              marginHorizontal: 50,
+              marginVertical: 10,
+              alignSelf: 'center',
+            }}
+            titleStyle={{fontWeight: 'bold'}}
             onPress={handleSubmit(searchItem)}
-            color={colors.secondary}
           />
+          {loading && <ActivityIndicator size="large" />}
         </Card>
       </KeyboardAvoidingView>
 
@@ -97,10 +114,15 @@ const Search = ({navigation}) => {
                       resizeMode="cover"
                       source={{uri: uploadsUrl + filename}}
                     />
-                    <Text style={styles.name}>{description}</Text>
-                    <Text style={styles.name}>
-                      {moment(timeAdded).format('Do MMMM YYYY')}
-                    </Text>
+
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        <Text>{description}</Text>
+                      </ListItem.Title>
+                      <ListItem.Subtitle>
+                        <Text>{moment(timeAdded).format('Do MMMM YYYY')}</Text>
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
                   </View>
                 </Card>
               </TouchableOpacity>
@@ -115,19 +137,18 @@ const Search = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.lightgreen,
   },
   user: {
     flexDirection: 'row',
     marginBottom: 6,
+    justifyContent: 'space-between',
+    fontSize: 16,
   },
   image: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
-  },
-  name: {
-    fontSize: 16,
-    marginTop: 5,
+    width: 50,
+    height: 50,
+    marginRight: 20,
   },
 });
 

@@ -133,7 +133,7 @@ const useAuthentication = () => {
 const useUser = () => {
   const getUserByToken = async (token) => {
     const options = {
-      // Sending json data with POST
+      // Sending json data with GET
       method: 'GET',
       headers: {'x-access-token': token},
     };
@@ -176,8 +176,24 @@ const useUser = () => {
       throw new Error('getUserById, ' + error.message);
     }
   };
+  const putUser = async (userData, token) => {
+    const options = {
+      // Sending json data with PUT
+      method: 'PUT',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    };
+    try {
+      return await doFetch(baseUrl + 'users', options);
+    } catch (error) {
+      throw new Error('putUser: ' + error.message);
+    }
+  };
 
-  return {getUserByToken, postUser, checkUsername, getUserById};
+  return {getUserByToken, postUser, checkUsername, getUserById, putUser};
 };
 
 const useTag = () => {

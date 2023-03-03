@@ -30,7 +30,7 @@ const Profile = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
-        <Card.Title>{user.username}</Card.Title>
+        <Card.Title>Personal Details</Card.Title>
         <Card.Divider />
         <View style={{position: 'relative', alignItems: 'center'}}>
           <Card.Image
@@ -51,29 +51,81 @@ const Profile = ({navigation}) => {
           <Icon name="email" />
           <ListItem.Title>{user.email}</ListItem.Title>
         </ListItem>
+        <Card.Divider />
         <Button
-          title="Logout!"
-          color={colors.secondary}
-          onPress={async () => {
-            console.log('Logging out!');
-            setUser({});
-            setIsLoggedIn(false);
-            // Clears the users data from asyncstorage when the user logs out
-            try {
-              await AsyncStorage.clear();
-            } catch (error) {
-              console.error('Clearing asyncstorage failed');
-            }
+          title="MY ACCOUNT"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderWidth: 0,
+            borderColor: 'transparent',
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 350,
+            marginHorizontal: 50,
+            marginVertical: 10,
+            alignSelf: 'center',
+          }}
+          titleStyle={{fontWeight: 'bold'}}
+          onPress={() => {
+            navigation.navigate('MyFiles');
           }}
         />
         <Button
-          title="My Files"
-          color={colors.secondary}
+          title="MY MESSAGES"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderWidth: 0,
+            borderColor: 'transparent',
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 350,
+            marginHorizontal: 50,
+            marginVertical: 10,
+            alignSelf: 'center',
+          }}
+          titleStyle={{fontWeight: 'bold'}}
           onPress={() => {
             navigation.navigate('MyFiles');
           }}
         />
       </Card>
+      <Button
+        title="LOG OUT"
+        titleStyle={{fontWeight: 'bold', fontSize: 18}}
+        onPress={async () => {
+          console.log('Logging out!');
+          setUser({});
+          setIsLoggedIn(false);
+          // Clears the users data from asyncstorage when the user logs out
+          try {
+            await AsyncStorage.clear();
+          } catch (error) {
+            console.error('Clearing asyncstorage failed');
+          }
+        }}
+        buttonStyle={{
+          borderWidth: 0,
+          borderColor: 'transparent',
+          borderRadius: 20,
+          backgroundColor: colors.secondary,
+        }}
+        containerStyle={{
+          width: 200,
+          marginHorizontal: 50,
+          marginVertical: 10,
+          alignSelf: 'center',
+          marginTop: 50,
+        }}
+        icon={{
+          name: 'logout',
+          size: 30,
+          color: 'white',
+        }}
+        iconRight
+        iconContainerStyle={{marginLeft: 10, marginRight: -10}}
+      />
     </View>
   );
 };

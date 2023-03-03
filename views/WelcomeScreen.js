@@ -59,19 +59,40 @@ const WelcomeScreen = ({navigation, route}) => {
       </View>
       <TouchableOpacity style={styles.registerButton}>
         <Button
-          title="CREATE AN ACCOUNT"
-          color={colors.secondary}
-          style={styles.buttonText}
+          title="REGISTER"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderWidth: 0,
+            borderColor: 'transparent',
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 350,
+            marginHorizontal: 50,
+            marginVertical: 10,
+          }}
+          titleStyle={{fontWeight: 'bold'}}
           onPress={handleRegistrationPress}
-        ></Button>
+        />
       </TouchableOpacity>
       <TouchableOpacity style={styles.loginButton}>
         <Button
-          title="LOG IN IF YOU HAVE AN ACCOUNT"
-          color={colors.secondary}
-          style={styles.buttonText}
+          title="LOGIN"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderWidth: 0,
+            borderColor: 'transparent',
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 350,
+            marginHorizontal: 50,
+            marginVertical: 10,
+            marginBottom: 30,
+          }}
+          titleStyle={{fontWeight: 'bold'}}
           onPress={handleLoginPress}
-        ></Button>
+        />
       </TouchableOpacity>
     </ImageBackground>
   );
@@ -98,23 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  registerButton: {
-    width: '100%',
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginButton: {
-    width: '100%',
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: colors.white,
-    fontSize: 13,
-    fontWeight: 'bold',
   },
 });
 
