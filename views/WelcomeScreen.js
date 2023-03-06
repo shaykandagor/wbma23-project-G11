@@ -32,8 +32,12 @@ const WelcomeScreen = ({navigation, route}) => {
       // If no there is no token available, do nothing
       if (userToken === null) return;
       const userData = await getUserByToken(userToken);
-      console.log('checkToken', userData);
-      setUser(userData);
+      const {full_name: fullName} = userData;
+      const {full_name, phone_number, address} = JSON.parse(fullName);
+      delete userData.full_name;
+      const userInfo = {...userData, full_name, phone_number, address};
+      setUser(userInfo);
+      console.log('checkToken', userInfo);
       setIsLoggedIn(true);
     } catch (error) {
       console.error('checkToken', error);

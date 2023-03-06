@@ -80,7 +80,11 @@ const StackScreen = () => {
     } else {
       return (
         <>
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen
+            name="Welcome"
+            component={WelcomeScreen}
+            options={{headerShown: false}}
+          />
           <Stack.Screen name="Login" component={Login} />
         </>
       );

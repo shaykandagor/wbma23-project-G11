@@ -5,10 +5,12 @@ import {MainProvider} from './contexts/MainContext';
 
 const App = () => {
   return (
-    <MainProvider>
-      <Navigator />
-      <StatusBar style="auto" />
-    </MainProvider>
+    <>
+      <MainProvider>
+        <Navigator />
+        <StatusBar style="auto" />
+      </MainProvider>
+    </>
   );
 };
 

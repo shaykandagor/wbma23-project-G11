@@ -18,7 +18,7 @@ const Login = ({navigation, route}) => {
   const [isRegister, setisRegister] = useState(route.params.register);
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollView}>
       <View style={styles.card}>
         <Image
           style={styles.logo}
@@ -53,19 +53,21 @@ const Login = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: colors.lightgreen,
+  },
   container: {
     padding: 16,
-    backgroundColor: colors.lightgreen,
     flex: 1,
   },
   card: {
-    backgroundColor: colors.lightgreen,
     alignItems: 'center',
     flex: 1,
   },
   logo: {
     width: 250,
     height: 200,
+    top: 20,
   },
   text: {
     paddingTop: 30,

@@ -40,7 +40,11 @@ const LoginForm = () => {
       await AsyncStorage.setItem('userToken', loginResult.token);
 
       // Set user in MainContext and set isLoggedIn to true to update app state
-      setUser(loginResult.user);
+      const {full_name: fullName} = loginResult.user;
+      const {full_name, phone_number, address} = JSON.parse(fullName);
+      // delete loginResult.user.full_name;
+      const userInfo = {...loginResult.user, full_name, phone_number, address};
+      setUser(userInfo);
       setIsLoggedIn(true);
     } catch (error) {
       console.error('LogIn', error);

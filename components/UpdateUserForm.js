@@ -14,24 +14,6 @@ const UpdateUserForm = ({navigation}) => {
   const [updated, setUpdated] = useState(false);
   const {putUser, getUserByToken} = useUser();
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const userToken = await AsyncStorage.getItem('userToken');
-        setToken(userToken);
-        const response = await getUserByToken(userToken);
-        setUser(response);
-        setUpdated(false);
-        // const {full_name, username, user_id, email} = response;
-        // reset({full_name, email});
-        // console.log('User token', userData);
-      } catch (error) {
-        console.log('Fetch user info', error);
-      }
-    };
-    fetchUserInfo();
-  }, [updated]);
-
   const {
     control,
     handleSubmit,
@@ -40,31 +22,55 @@ const UpdateUserForm = ({navigation}) => {
     defaultValues: {
       full_name: user.full_name,
       email: user.email,
-      phone_number: '',
-      address: '',
+      phone_number: user.phone_number,
+      address: user.address,
     },
     mode: 'onBlur',
   });
 
   const updateUser = async (userData) => {
     const {full_name, email, phone_number, address} = userData;
-    const profileInfo = {full_name, email};
-    const extraProfileInfo = {phone_number, address};
+    const fullName = JSON.stringify({phone_number, address, full_name});
+    const profileInfo = {full_name: fullName, email};
     try {
       const updateMessage = await putUser(profileInfo, token);
       console.log(updateMessage);
       setUpdated(true);
-      console.log(navigation);
       navigation.navigate('Profile');
     } catch (error) {
       console.error('updateUser', error);
     }
   };
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userToken = await AsyncStorage.getItem('userToken');
+      setToken(userToken);
+      if (updated) {
+        try {
+          const response = await getUserByToken(userToken);
+          const {full_name: fullName} = response;
+          const {full_name, phone_number, address} = JSON.parse(fullName);
+          delete response.full_name;
+          const userInfo = {...response, full_name, phone_number, address};
+          console.log('User Info', userInfo);
+          setUser(userInfo);
+          setUpdated(false);
+          // const {full_name, username, user_id, email} = response;
+          // reset({full_name, email});
+          // console.log('User token', userData);
+        } catch (error) {
+          console.log('Fetch user info', error);
+        }
+      }
+    };
+    fetchUserInfo();
+  }, [updated]);
+
   return (
     <View style={styles.container}>
       <Card>
-        <Card.Title>RENEW</Card.Title>
+        <Card.Title>Update Profile</Card.Title>
         <Controller
           control={control}
           rules={{

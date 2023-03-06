@@ -22,6 +22,8 @@ const RegisterForm = () => {
       username: '',
       password: '',
       confirmPassword: '',
+      phone_number: '',
+      address: '',
     },
     mode: 'onBlur',
   });
@@ -30,6 +32,8 @@ const RegisterForm = () => {
   const register = async (registerData) => {
     // Removing confirmPassword from the data because the field doesn't exist in the backend
     delete registerData.confirmPassword;
+    delete registerData.phone_number;
+    delete registerData.address;
     console.log('Registering', registerData);
     try {
       // Calling postUser function with the registerData
@@ -186,6 +190,56 @@ const RegisterForm = () => {
             />
           )}
           name="confirmPassword"
+        />
+        <Controller
+          control={control}
+          rules={{
+            required: {value: true, message: 'Phone Number is required.'},
+            // pattern: {
+            //   value: /(?=.*\p{Lu})(?=.*[0-9]).{5,}/u,
+            //   message:
+            //     'Min 12 characters, needs one number and one uppercase letter',
+            // },
+          }}
+          render={({field: {onChange, onBlur, value}}) => (
+            <Input
+              placeholder="Phone Number"
+              leftIcon={{
+                name: 'call',
+                color: colors.lightgray,
+              }}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              errorMessage={errors.phone_number && errors.phone_number.message}
+            />
+          )}
+          name="phone_number"
+        />
+        <Controller
+          control={control}
+          rules={{
+            minLength: {
+              value: 3,
+              message: 'Address min length is 3 characters.',
+            },
+          }}
+          render={({field: {onChange, onBlur, value}}) => (
+            <Input
+              placeholder="Address"
+              leftIcon={{
+                name: 'pin-drop',
+                color: colors.lightgray,
+              }}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              errorMessage={
+                errors.confirmPassword && errors.confirmPassword.message
+              }
+            />
+          )}
+          name="address"
         />
         {/* Render sign in button */}
         <Button

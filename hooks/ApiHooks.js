@@ -193,7 +193,13 @@ const useUser = () => {
     }
   };
 
-  return {getUserByToken, postUser, checkUsername, getUserById, putUser};
+  return {
+    getUserByToken,
+    postUser,
+    checkUsername,
+    getUserById,
+    putUser,
+  };
 };
 
 const useTag = () => {
