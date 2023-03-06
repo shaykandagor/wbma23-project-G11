@@ -1,5 +1,11 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Image, View, ScreenOrientation} from 'react-native';
+import {
+  StyleSheet,
+  Image,
+  View,
+  ScreenOrientation,
+  TouchableOpacity,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Card, Text, Icon, Button} from 'react-native-elements';
@@ -7,6 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {ListItem} from '@rneui/themed';
+import colors from '../config/colors';
+import Headers from '../components/Header';
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -18,7 +26,12 @@ const Single = ({route}) => {
     user_id: userId,
     media_type: type,
     file_id: fileId,
+    username: userName,
   } = route.params;
+
+  const handleBackPress = () => {
+    route.goBack('Home');
+  };
 
   const video = useRef(null);
   const [owner, setOwner] = useState({});
@@ -92,14 +105,6 @@ const Single = ({route}) => {
     }
   };
 
-  const showVideoInFullScreen = async () => {
-    try {
-      await video.current.presentFullscreenPlayer();
-    } catch (error) {
-      console.error('showVideoInFullScreen', error.message);
-    }
-  };
-
   useEffect(() => {
     getOwner();
     getLikes();
@@ -120,7 +125,7 @@ const Single = ({route}) => {
   }, []);
 
   return (
-    <Card>
+    <Card style={styles.container}>
       <Image style={styles.itemImage} source={{uri: uploadsUrl + filename}} />
       <View style={styles.categoryContainer}>
         <Text style={styles.categoryText}>Women</Text>
@@ -134,22 +139,12 @@ const Single = ({route}) => {
         ) : (
           <Icon name="favorite-border" onPress={likeFile} />
         )}
-        <Text>Total likes: {likes.length}</Text>
+        <Text style={{color: colors.primary}}>Total likes: {likes.length}</Text>
       </ListItem>
 
-      <Text style={styles.itemPrice}>$100</Text>
-      <Text style={styles.itemLocation}>Location</Text>
+      <Text style={styles.itemPrice}>€100</Text>
+      <Text style={styles.itemLocation}>Helsinki</Text>
       <Text style={styles.itemDescription}>{description}</Text>
-      <View style={styles.sellerInfoContainer}>
-        <Text style={styles.sellerName}>Seller Name</Text>
-        <Icon
-          name="shopping-bag"
-          type="font-awesome"
-          color="#517fa4"
-          style={styles.shoppingBagIcon}
-        />
-        <Text style={styles.sellerItemsCount}>20</Text>
-      </View>
       <Text style={styles.postedDate}>{timeAdded}</Text>
       <Button
         icon={<Icon name="envelope" type="font-awesome" color="#ffffff" />}
@@ -160,16 +155,20 @@ const Single = ({route}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.lightgray,
+  },
   itemImage: {
     width: '100%',
-    height: 200,
+    height: 300,
   },
   categoryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   categoryText: {
-    color: '#517fa4',
+    color: colors.primary,
     fontWeight: 'bold',
   },
   itemName: {
@@ -179,13 +178,13 @@ const styles = StyleSheet.create({
   },
   heartIcon: {
     position: 'absolute',
-    right: 0,
+    left: 0,
     top: 10,
   },
   itemPrice: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#f50',
+    color: colors.primary,
     marginTop: 10,
   },
   itemLocation: {

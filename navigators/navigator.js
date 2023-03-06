@@ -13,6 +13,7 @@ import {Icon} from '@rneui/themed';
 import MyFiles from '../views/MyFiles';
 import Modify from '../views/Modify';
 import Login from '../views/Login';
+import colors from '../config/colors';
 
 // Create the bottom tab navigator
 const Tab = createBottomTabNavigator();
@@ -30,7 +31,7 @@ const getTabScreenOptions = (iconName) => {
 // Component for the tab navigator
 const TabScreen = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
         name="Home"
         component={Home}
@@ -70,16 +71,41 @@ const StackScreen = () => {
             component={TabScreen}
             options={{headerShown: false}}
           />
-          <Stack.Screen name="Single" component={Single} />
-          <Stack.Screen name="MyFiles" component={MyFiles} />
-          <Stack.Screen name="Modify" component={Modify} />
+          <Stack.Screen
+            name="Single"
+            component={Single}
+            options={{
+              title: 'ReNew',
+              headerStyle: {backgroundColor: colors.primary},
+              headerTitleStyle: {color: colors.lightgray},
+              headerTintColor: colors.lightgray,
+            }}
+          />
+          <Stack.Screen
+            name="MyFiles"
+            component={MyFiles}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Modify"
+            component={Modify}
+            options={{headerShown: false}}
+          />
         </>
       );
     } else {
       return (
         <>
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen
+            name="Welcome"
+            component={WelcomeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
         </>
       );
     }
