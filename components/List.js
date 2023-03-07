@@ -5,39 +5,30 @@ import PropTypes from 'prop-types';
 import {StyleSheet} from 'react-native';
 import colors from '../config/colors.js';
 import {Dimensions} from 'react-native';
-import {Constants} from 'expo';
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+import Constants from 'expo-constants';
+import {View} from 'react-native';
 
 const List = ({navigation, myFilesOnly = false}) => {
   // Loading the app components with the useMedia hook
   const {mediaArray} = useMedia(myFilesOnly);
   return (
-    <FlatList
-      data={mediaArray}
-      keyExtractor={(item, index) => index.toString()}
-      numColumns={2}
-      contentContainerStyle={styles.list}
-      columnWrapperStyle={styles.column}
-      renderItem={({item}) => (
-        <ListItem navigation={navigation} singleMedia={item} />
-      )}
-    />
+    <View containerStyle={styles.container}>
+      <FlatList
+        data={mediaArray}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={2}
+        renderItem={({item}) => (
+          <ListItem navigation={navigation} singleMedia={item} />
+        )}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: Constants.statusBarHeight,
-    flexDirection: 'column',
-  },
-  list: {
-    justifyContent: 'space-around',
-  },
-  column: {
-    flexShrink: 1,
+    padding: 10,
+    backgroundColor: colors.white,
   },
 });
 

@@ -1,11 +1,5 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {
-  StyleSheet,
-  Image,
-  View,
-  ScreenOrientation,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, Image, View, ScreenOrientation} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Card, Text, Icon, Button} from 'react-native-elements';
@@ -14,7 +8,6 @@ import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {ListItem} from '@rneui/themed';
 import colors from '../config/colors';
-import Headers from '../components/Header';
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -29,15 +22,9 @@ const Single = ({route}) => {
     username: userName,
   } = route.params;
 
-  const handleBackPress = () => {
-    route.goBack('Home');
-  };
-
-  const video = useRef(null);
-  const [owner, setOwner] = useState({});
+  const [setOwner] = useState({});
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
@@ -95,15 +82,15 @@ const Single = ({route}) => {
     }
   };
 
-  const lock = async () => {
-    try {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
-      );
-    } catch (error) {
-      console.error('lock', error.message);
-    }
-  };
+  // const lock = async () => {
+  //   try {
+  //     await ScreenOrientation.lockAsync(
+  //       ScreenOrientation.OrientationLock.PORTRAIT_UP
+  //     );
+  //   } catch (error) {
+  //     console.error('lock', error.message);
+  //   }
+  // };
 
   useEffect(() => {
     getOwner();
@@ -114,14 +101,14 @@ const Single = ({route}) => {
     //   console.log('orientation', evt);
     //   if (evt.orientationInfo.orientation > 2) {
     //     // show video in fullscreen
-    //     if (video.current) showVideoInFullScreen();
+    //     // if (video.current) showVideoInFullScreen();
     //   }
     // });
 
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(orientSub);
-      lock();
-    };
+    // return () => {
+    //   ScreenOrientation.removeOrientationChangeListener(orientSub);
+    //   lock();
+    // };
   }, []);
 
   return (
@@ -142,7 +129,7 @@ const Single = ({route}) => {
         <Text style={{color: colors.primary}}>Total likes: {likes.length}</Text>
       </ListItem>
 
-      <Text style={styles.itemPrice}>€100</Text>
+      <Text style={styles.itemPrice}>€20</Text>
       <Text style={styles.itemLocation}>Helsinki</Text>
       <Text style={styles.itemDescription}>{description}</Text>
       <Text style={styles.postedDate}>{timeAdded}</Text>
@@ -168,6 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   categoryText: {
+    marginTop: 10,
     color: colors.primary,
     fontWeight: 'bold',
   },
@@ -188,7 +176,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   itemLocation: {
-    color: '#517fa4',
+    color: colors.primary,
     marginTop: 10,
   },
   itemDescription: {
@@ -202,15 +190,8 @@ const styles = StyleSheet.create({
   sellerName: {
     fontWeight: 'bold',
   },
-  shoppingBagIcon: {
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  sellerItemsCount: {
-    color: '#517fa4',
-  },
   postedDate: {
-    color: '#517fa4',
+    color: colors.primary,
     marginTop: 10,
   },
 });
