@@ -39,6 +39,7 @@ const Upload = ({navigation}) => {
     defaultValues: {
       // category: '',
       // size: '',
+      price: '',
       title: '',
       description: '',
     },
@@ -52,7 +53,7 @@ const Upload = ({navigation}) => {
     const formData = new FormData();
     // formData.append('category', JSON.stringify(moreFileData));
     // formData.append('size', JSON.stringify(moreFileData));
-    // formData.append('price', JSON.stringify());
+    // formData.append('price', JSON.stringify(moreFileData));
     formData.append('title', data.title);
     formData.append('description', data.description);
     const filename = mediafile.uri.split('/').pop();
@@ -203,7 +204,7 @@ const Upload = ({navigation}) => {
             <Controller
               control={control}
               rules={{
-                required: {value: true, message: 'Title is required.'},
+                required: {value: true, message: 'Description is required.'},
                 minLength: {
                   value: 5,
                   message: 'Description min length is 5 characters.',
@@ -363,10 +364,14 @@ const styles = StyleSheet.create({
     margin: 14,
   },
   imageContainer: {
-    alignContent: 'center',
+    width:'100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   imagestyle: {
+    resizeMode: 'center',
     height: 400,
     width: 225,
     marginBottom: 20,
