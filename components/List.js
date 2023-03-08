@@ -4,8 +4,6 @@ import ListItem from './ListItem';
 import PropTypes from 'prop-types';
 import {StyleSheet} from 'react-native';
 import colors from '../config/colors.js';
-import {Dimensions} from 'react-native';
-import Constants from 'expo-constants';
 import {View} from 'react-native';
 
 const List = ({navigation, myFilesOnly = false}) => {
@@ -17,6 +15,7 @@ const List = ({navigation, myFilesOnly = false}) => {
         data={mediaArray}
         keyExtractor={(item, index) => index.toString()}
         numColumns={2}
+        contentContainerStyle={{paddingBottom: 60}}
         renderItem={({item}) => (
           <ListItem navigation={navigation} singleMedia={item} />
         )}

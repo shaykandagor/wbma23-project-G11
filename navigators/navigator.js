@@ -24,7 +24,7 @@ const Stack = createNativeStackNavigator();
 // Returns the options object for each tab screen
 const getTabScreenOptions = (iconName) => {
   return {
-    tabBarIcon: ({color}) => <Icon name={iconName} color={color} />,
+    tabBarIcon: () => <Icon name={iconName} color={colors.primary} />,
   };
 };
 

@@ -8,6 +8,9 @@ import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {ListItem} from '@rneui/themed';
 import colors from '../config/colors';
+import {Dimensions, ScrollView, TouchableOpacity} from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -82,15 +85,15 @@ const Single = ({route}) => {
     }
   };
 
-  // const lock = async () => {
-  //   try {
-  //     await ScreenOrientation.lockAsync(
-  //       ScreenOrientation.OrientationLock.PORTRAIT_UP
-  //     );
-  //   } catch (error) {
-  //     console.error('lock', error.message);
-  //   }
-  // };
+  const lock = async () => {
+    try {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      );
+    } catch (error) {
+      console.error('lock', error.message);
+    }
+  };
 
   useEffect(() => {
     getOwner();
@@ -104,7 +107,6 @@ const Single = ({route}) => {
     //     // if (video.current) showVideoInFullScreen();
     //   }
     // });
-
     // return () => {
     //   ScreenOrientation.removeOrientationChangeListener(orientSub);
     //   lock();
@@ -112,43 +114,77 @@ const Single = ({route}) => {
   }, []);
 
   return (
-    <Card style={styles.container}>
-      <Image style={styles.itemImage} source={{uri: uploadsUrl + filename}} />
-      <View style={styles.categoryContainer}>
-        <Text style={styles.categoryText}>Women</Text>
-        <Text style={styles.categoryText}>Size 38</Text>
-        <Text style={styles.categoryText}>Trousers</Text>
-      </View>
-      <Text style={styles.itemName}>{title}</Text>
-      <ListItem>
-        {userLikesIt ? (
-          <Icon name="favorite" color="red" onPress={dislikeFile} />
-        ) : (
-          <Icon name="favorite-border" onPress={likeFile} />
-        )}
-        <Text style={{color: colors.primary}}>Total likes: {likes.length}</Text>
-      </ListItem>
-
-      <Text style={styles.itemPrice}>€20</Text>
-      <Text style={styles.itemLocation}>Helsinki</Text>
-      <Text style={styles.itemDescription}>{description}</Text>
-      <Text style={styles.postedDate}>{timeAdded}</Text>
-      <Button
-        icon={<Icon name="envelope" type="font-awesome" color="#ffffff" />}
-        title="Send message"
-      />
-    </Card>
+    <View style={styles.cardShadow}>
+      <ScrollView style={styles.scrollView}>
+        <Image style={styles.itemImage} source={{uri: uploadsUrl + filename}} />
+        <View style={styles.categoryContainer}>
+          <Text style={styles.categoryText}>Women</Text>
+          <Text style={styles.categoryText}>Size 38</Text>
+          <Text style={styles.categoryText}>Trousers</Text>
+        </View>
+        <Text style={styles.itemName}>{title}</Text>
+        <Text style={styles.itemPrice}>€20</Text>
+        <Text style={styles.itemLocation}>Helsinki</Text>
+        <ListItem containerStyle={{backgroundColor: colors.lightgray}}>
+          {userLikesIt ? (
+            <Icon
+              name="favorite"
+              color={colors.primary}
+              onPress={dislikeFile}
+            />
+          ) : (
+            <Icon
+              name="favorite-border"
+              color={colors.primary}
+              onPress={likeFile}
+            />
+          )}
+          <Text style={{color: colors.primary}}>
+            Total likes: {likes.length}
+          </Text>
+        </ListItem>
+        <Text style={styles.itemDescription}>{description}</Text>
+        <Text style={styles.postedDate}>{timeAdded}</Text>
+        <TouchableOpacity style={styles.button}>
+          <Icon
+            name="envelope"
+            type="font-awesome"
+            color={colors.white}
+            style={{marginRight: 10}}
+          />
+          <Text>Leave a comment</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  itemContainer: {
     backgroundColor: colors.lightgray,
+    padding: 10,
+    borderRadius: 10,
+    overflow: 'scroll',
+    // width: width,
+    justifyContent: 'center',
+    marginTop: 15,
+    // width: width - 20,
+  },
+  cardShadow: {
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
   itemImage: {
     width: '100%',
-    height: 300,
+    height: 450,
   },
   categoryContainer: {
     flexDirection: 'row',
@@ -193,6 +229,20 @@ const styles = StyleSheet.create({
   postedDate: {
     color: colors.primary,
     marginTop: 10,
+  },
+  scrollView: {
+    backgroundColor: colors.lightgray,
+    marginHorizontal: 20,
+    padding: 15,
+    marginBottom: 20,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    padding: 10,
+    marginBottom: 30,
   },
 });
 
