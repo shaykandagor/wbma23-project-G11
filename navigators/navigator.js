@@ -16,6 +16,7 @@ import Login from '../views/Login';
 import UpdateUser from '../views/UpdateUser';
 import Comments from '../views/Comments';
 import colors from '../config/colors';
+import Favourites from '../views/Favourites';
 
 // Create the bottom tab navigator
 const Tab = createBottomTabNavigator();
@@ -65,6 +66,11 @@ const TabScreen = () => {
         name="Comments"
         component={Comments}
         options={getTabScreenOptions('search')}
+      />
+      <Tab.Screen
+        name="Favourites"
+        component={Favourites}
+        options={getTabScreenOptions('star')}
       />
     </Tab.Navigator>
   );

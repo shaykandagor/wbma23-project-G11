@@ -107,12 +107,16 @@ const useMedia = (myFilesOnly) => {
     }
   };
 
+  const getMediaByFileId = (id) =>
+    mediaArray.find((media) => media.file_id === id);
+
   return {
     mediaArray,
     postMedia,
     deleteMedia,
     putMedia,
     searchMedia,
+    getMediaByFileId,
   };
 };
 
@@ -261,13 +265,13 @@ const useFavourite = () => {
   };
 
   // Implement this
-  const getFavouritesByUser = async (token) => {
+  const getFavourites = async (token) => {
     const options = {
       method: 'GET',
       headers: {'x-access-token': token},
     };
     try {
-      return await doFetch(baseUrl + '', options);
+      return await doFetch(baseUrl + 'favourites', options);
     } catch (error) {
       throw new Error('getFavouritesByUser: ' + error.message);
     }
@@ -289,7 +293,7 @@ const useFavourite = () => {
   return {
     postFavourite,
     getFavouritesByFileId,
-    getFavouritesByUser,
+    getFavourites,
     deleteFavourite,
   };
 };
