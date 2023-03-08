@@ -14,6 +14,8 @@ import MyFiles from '../views/MyFiles';
 import Modify from '../views/Modify';
 import Login from '../views/Login';
 import UpdateUser from '../views/UpdateUser';
+import Comments from '../views/Comments';
+import colors from '../config/colors';
 
 // Create the bottom tab navigator
 const Tab = createBottomTabNavigator();
@@ -31,7 +33,14 @@ const getTabScreenOptions = (iconName) => {
 // Component for the tab navigator
 const TabScreen = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      tabBarOptions={{
+        activeBackgroundColor: colors.secondary,
+        activeTintColor: colors.white,
+        inactiveBackgroundColor: colors.gray,
+        inactiveTintColor: colors.black,
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
@@ -50,6 +59,11 @@ const TabScreen = () => {
       <Tab.Screen
         name="Search"
         component={Search}
+        options={getTabScreenOptions('search')}
+      />
+      <Tab.Screen
+        name="Comments"
+        component={Comments}
         options={getTabScreenOptions('search')}
       />
     </Tab.Navigator>
@@ -71,10 +85,26 @@ const StackScreen = () => {
             component={TabScreen}
             options={{headerShown: false}}
           />
-          <Stack.Screen name="Single" component={Single} />
-          <Stack.Screen name="MyFiles" component={MyFiles} />
-          <Stack.Screen name="Modify" component={Modify} />
-          <Stack.Screen name="UpdateUser" component={UpdateUser} />
+          <Stack.Screen
+            name="Single"
+            component={Single}
+            options={{title: 'Item Details'}}
+          />
+          <Stack.Screen
+            name="MyFiles"
+            component={MyFiles}
+            options={{title: 'My Feed'}}
+          />
+          <Stack.Screen
+            name="Modify"
+            component={Modify}
+            options={{title: 'Modify Item'}}
+          />
+          <Stack.Screen
+            name="UpdateUser"
+            component={UpdateUser}
+            options={{title: 'Update Profile'}}
+          />
         </>
       );
     } else {

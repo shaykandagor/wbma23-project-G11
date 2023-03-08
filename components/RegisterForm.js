@@ -58,7 +58,7 @@ const RegisterForm = () => {
 
   return (
     <View style={styles.container}>
-      <Card>
+      <Card containerStyle={{marginTop: 5, borderRadius: 20}}>
         {/* Using Controller component to wrap the Input component and get the
         value and errors */}
         <Controller

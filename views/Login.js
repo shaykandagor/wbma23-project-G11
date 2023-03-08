@@ -12,6 +12,7 @@ import {Button, Image, Text} from '@rneui/themed';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import colors from '../config/colors';
+import Input from 'react-native-input-style';
 
 // Login function is called when the login button is pressed
 const Login = ({navigation, route}) => {
@@ -22,7 +23,7 @@ const Login = ({navigation, route}) => {
       <View style={styles.card}>
         <Image
           style={styles.logo}
-          source={require('../assets/renewlogo.jpg')}
+          source={require('../assets/RenewLogo.png')}
         />
       </View>
 
@@ -63,11 +64,11 @@ const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
     flex: 1,
+    paddingTop: 10,
   },
   logo: {
     width: 250,
-    height: 200,
-    top: 20,
+    height: 250,
   },
   text: {
     paddingTop: 30,

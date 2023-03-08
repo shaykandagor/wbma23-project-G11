@@ -1,7 +1,7 @@
 import List from '../components/List';
 import PropTypes from 'prop-types';
 import {View, StyleSheet} from 'react-native';
-import {Button, Card, Text} from '@rneui/themed';
+import {Button, Card, Image, Text} from '@rneui/themed';
 import colors from '../config/colors';
 import {useContext, useEffect, useState} from 'react';
 import {useTag} from '../hooks/ApiHooks';
@@ -32,52 +32,58 @@ const MyFiles = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Card style={styles.card}>
+      <Card>
         <Card.Title>My Profile</Card.Title>
         <Card.Divider />
         <Card.Image style={styles.avatar} source={{uri: uploadsUrl + avatar}} />
-        <Text style={styles.text}>{user.username}</Text>
-        <Card.Divider />
-        <Button
-          title="EDIT PROFILE"
-          buttonStyle={{
-            backgroundColor: colors.secondary,
-            borderRadius: 5,
-          }}
-          titleStyle={{fontWeight: 'bold', fontSize: 15}}
-          containerStyle={{
-            marginHorizontal: 50,
-            height: 50,
-            width: 200,
-            marginVertical: 10,
-          }}
-          onPress={() => {
-            navigation.navigate('UpdateUser');
-          }}
-        />
+        <View style={styles.card}>
+          <Text style={styles.text}>{user.username}</Text>
+          <Button
+            title="EDIT PROFILE"
+            buttonStyle={{
+              backgroundColor: colors.secondary,
+              borderRadius: 5,
+            }}
+            titleStyle={{fontWeight: 'bold', fontSize: 15}}
+            containerStyle={{
+              marginHorizontal: 50,
+              height: 50,
+              width: 200,
+              marginVertical: 10,
+            }}
+            onPress={() => {
+              navigation.navigate('UpdateUser');
+            }}
+          />
+        </View>
       </Card>
-      <Card.Divider />
-      <ScrollView>
+
+      <View>
         <List navigation={navigation} myFilesOnly={true} />
-      </ScrollView>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: colors.lightgreen,
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 50,
+    marginRight: 10,
   },
   card: {
     alignItems: 'center',
+    flexDirection: 'column',
+    marginBottom: 6,
   },
   text: {
-    alignItems: 'flex-end',
+    fontSize: 16,
+    marginTop: 5,
   },
 });
 

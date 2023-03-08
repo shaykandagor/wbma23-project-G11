@@ -107,7 +107,13 @@ const useMedia = (myFilesOnly) => {
     }
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia, searchMedia};
+  return {
+    mediaArray,
+    postMedia,
+    deleteMedia,
+    putMedia,
+    searchMedia,
+  };
 };
 
 const useAuthentication = () => {
@@ -253,8 +259,18 @@ const useFavourite = () => {
       throw new Error('getFavouriterByFileId error, ' + error.message);
     }
   };
+
+  // Implement this
   const getFavouritesByUser = async (token) => {
-    // TODO: implement this
+    const options = {
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    try {
+      return await doFetch(baseUrl + '', options);
+    } catch (error) {
+      throw new Error('getFavouritesByUser: ' + error.message);
+    }
   };
   const deleteFavourite = async (fileId, token) => {
     const options = {
@@ -278,4 +294,35 @@ const useFavourite = () => {
   };
 };
 
-export {useMedia, useAuthentication, useUser, useTag, useFavourite};
+const useComment = () => {
+  const postComment = async (token, data) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(baseUrl + 'comments', options);
+    } catch (error) {
+      throw new Error('postComment: ' + error.message);
+    }
+  };
+
+  const getCommentsByFileId = async (id) => {
+    const options = {
+      method: 'GET',
+    };
+    try {
+      return await doFetch(baseUrl + 'comments/file/' + id, options);
+    } catch (error) {
+      throw new Error('getCommentsByFileId: ' + error.message);
+    }
+  };
+
+  return {postComment, getCommentsByFileId};
+};
+
+export {useMedia, useAuthentication, useUser, useTag, useFavourite, useComment};

@@ -4,21 +4,24 @@ import colors from '../config/colors';
 import Constants from 'expo-constants';
 import {useNetInfo} from '@react-native-community/netinfo';
 
-export default function OfflineNotice() {
+const OfflineNotice = () => {
   const netInfo = useNetInfo();
-  console.log(netInfo);
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>No Internet Connection</Text>
-    </View>
-  );
-}
+  if (netInfo.type !== 'unknown' && netInfo.isInternetReachable === false)
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>No Internet Connection</Text>
+      </View>
+    );
+
+  return null;
+};
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: colors.lightgreen,
-    height: '100%',
+    backgroundColor: 'red',
+    height: 50,
+    width: '100%',
     position: 'absolute',
     justifyContent: 'center',
     zIndex: 1,
@@ -28,3 +31,5 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
+
+export default OfflineNotice;

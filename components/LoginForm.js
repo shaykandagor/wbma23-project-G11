@@ -55,7 +55,7 @@ const LoginForm = () => {
 
   return (
     <View style={styles.container}>
-      <Card>
+      <Card containerStyle={{marginTop: 15, borderRadius: 20}}>
         {/* Render username input field with form validation */}
         <Controller
           control={control}

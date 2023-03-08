@@ -57,9 +57,8 @@ const WelcomeScreen = ({navigation, route}) => {
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
-          source={require('../assets/renewlogo.jpg')}
+          source={require('../assets/RenewLogo.png')}
         ></Image>
-        <Text style={styles.logoText}>Giving Second Home to Great Stuff</Text>
       </View>
       <TouchableOpacity style={styles.registerButton}>
         <Button
@@ -112,11 +111,11 @@ const styles = StyleSheet.create({
   logoContainer: {
     position: 'absolute',
     alignItems: 'center',
-    top: 100,
+    top: 70,
   },
   logo: {
-    width: 250,
-    height: 200,
+    width: 400,
+    height: 400,
   },
   logoText: {
     color: colors.black,
