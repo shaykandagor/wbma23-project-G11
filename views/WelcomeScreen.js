@@ -57,7 +57,7 @@ const WelcomeScreen = ({navigation, route}) => {
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
-          source={require('../assets/RenewLogo.png')}
+          source={require('../assets/renewLogo.png')}
         ></Image>
       </View>
       <TouchableOpacity style={styles.registerButton}>

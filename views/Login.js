@@ -23,7 +23,7 @@ const Login = ({navigation, route}) => {
       <View style={styles.card}>
         <Image
           style={styles.logo}
-          source={require('../assets/RenewLogo.png')}
+          source={require('../assets/renewLogo.png')}
         />
       </View>
 

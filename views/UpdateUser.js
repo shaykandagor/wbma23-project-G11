@@ -20,7 +20,7 @@ const UpdateUser = ({navigation, route}) => {
       <View style={styles.card}>
         <Image
           style={styles.logo}
-          source={require('../assets/renewlogo.jpg')}
+          source={require('../assets/renewLogo.png')}
         />
       </View>
 
