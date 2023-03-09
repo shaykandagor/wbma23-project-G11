@@ -11,7 +11,7 @@
 <h3 align="center">ReNew</h3>
 
   <p align="center">
-    An application that helps users get rid of unnecessary things in their wardrobe by selling them. Makes the world a better, cleaner place, allows people to reuse things, giving them new life with other people.
+    This React Mobile Application has been developed within the scope of Web Based Mobile Applications
     <br />
     <a href="https://github.com/shaykandagor/wbma23-project-G11"><strong>Explore the docs »</strong></a>
     <br />
@@ -20,10 +20,35 @@
   </p>
 </div>
 
+## Developers and Maintainers
+1. Shayne Kandagor
+1. Yana Krylova
+1. Maiju Himberg
+
+### Project Description
+ReNew is a mobile app that connects buyers and sellers of second-hand clothing items. The app provides a convenient and user-friendly platform for users to buy and sell high-quality, gently-used clothing items. Sellers can create virtual closets and upload photos of their items, while buyers can easily search for items. In-app messaging allows buyers and sellers to communicate and negotiate prices, while secure payment processing ensures a safe and hassle-free transaction. The app also includes favourites page, allowing users to share their favorite finds. Our goal is to promote sustainability and reduce waste by encouraging people to shop second-hand and make fashion more sustainable.
+ 
+ ## Intended use of the app
+### Sustainability and reduce waste.
+Second-hand clothing app is to provide a user-friendly platform for buyers and sellers to buy and sell high-quality, gently-used clothing items
+
+
+### User Target and End Users
+1. A fashion-conscious individual who is looking for unique and vintage clothing items.
+1. A budget-conscious consumer who is looking for affordable clothing options.
+1. A sustainable consumer who is looking to reduce their environmental impact by shopping second-hand.
+1. Students and young adults who are looking for trendy and stylish clothing options at an affordable price.
+1. A parents who is looking for gently-used clothing items for their children.
+
 <!-- ABOUT THE PROJECT -->
 
-### Built With
+### Built With                                                                                                                                                     
 * [![React][React.js]][React-url]
+
+1.Frontend: React Native and React
+1.Backend: [MEDIA API DOCS](https://media.mw.metropolia.fi/wbma/docs/)                                                                                                                                                    
+                                                                                                                                                     
+                                                                                                                                                     
 
 <!-- GETTING STARTED -->
 ## Getting Started

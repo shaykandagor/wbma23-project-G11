@@ -4,8 +4,10 @@ import {Controller, useForm} from 'react-hook-form';
 import {Input, Button, Card} from '@rneui/themed';
 import {View, StyleSheet} from 'react-native';
 import colors from '../config/colors';
+import {useNavigation} from '@react-navigation/native';
 
 const RegisterForm = () => {
+  const navigation = useNavigation();
   // Destructuring postUser and checkUsername from the custom hook useUser
   const {postUser, checkUsername} = useUser();
 
@@ -31,14 +33,22 @@ const RegisterForm = () => {
   // Function to handle registration
   const register = async (registerData) => {
     // Removing confirmPassword from the data because the field doesn't exist in the backend
+    const {address, phone_number, full_name: fullName} = registerData;
+    const full_name = JSON.stringify({
+      address,
+      phone_number,
+      full_name: fullName,
+    });
     delete registerData.confirmPassword;
     delete registerData.phone_number;
     delete registerData.address;
+    registerData.full_name = full_name;
     console.log('Registering', registerData);
     try {
       // Calling postUser function with the registerData
       const registerResult = await postUser(registerData);
       console.log('registeration result', registerResult);
+      navigation.navigate('Login', {isRegister: true});
     } catch (error) {
       console.error('register', error);
       // TODO: Notify user about failed registration attempt
@@ -245,7 +255,7 @@ const RegisterForm = () => {
         <Button
           title="SIGN IN"
           buttonStyle={{
-            backgroundColor: colors.secondary,
+            backgroundColor: colors.primary,
             borderWidth: 0,
             borderColor: 'transparent',
             borderRadius: 30,

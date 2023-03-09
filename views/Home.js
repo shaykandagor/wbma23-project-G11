@@ -1,14 +1,12 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView} from 'react-native';
+import {StyleSheet, SafeAreaView, Platform} from 'react-native';
 import List from '../components/List';
 import colors from '../config/colors.js';
 import PropTypes from 'prop-types';
-import Headers from '../components/Header';
 
 const Home = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
-      <Headers label="ReNew" />
       <List navigation={navigation} />
     </SafeAreaView>
   );

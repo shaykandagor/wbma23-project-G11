@@ -1,13 +1,12 @@
 import List from '../components/List';
 import PropTypes from 'prop-types';
 import {View, StyleSheet} from 'react-native';
-import {Button, Card, Image, Text} from '@rneui/themed';
+import {Button, Card, Text} from '@rneui/themed';
 import colors from '../config/colors';
 import {useContext, useEffect, useState} from 'react';
 import {useTag} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {uploadsUrl} from '../utils/variables';
-import {ScrollView} from 'react-native';
 
 const MyFiles = ({navigation}) => {
   const {getFilesByTag} = useTag();
@@ -35,13 +34,18 @@ const MyFiles = ({navigation}) => {
       <Card>
         <Card.Title>My Profile</Card.Title>
         <Card.Divider />
-        <Card.Image style={styles.avatar} source={{uri: uploadsUrl + avatar}} />
+        <View style={{position: 'relative', alignItems: 'center'}}>
+          <Card.Image
+            style={styles.avatar}
+            source={{uri: uploadsUrl + avatar}}
+          />
+        </View>
         <View style={styles.card}>
           <Text style={styles.text}>{user.username}</Text>
           <Button
             title="EDIT PROFILE"
             buttonStyle={{
-              backgroundColor: colors.secondary,
+              backgroundColor: colors.primary,
               borderRadius: 5,
             }}
             titleStyle={{fontWeight: 'bold', fontSize: 15}}
@@ -74,12 +78,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginRight: 10,
+    alignSelf: 'center',
   },
   card: {
     alignItems: 'center',
     flexDirection: 'column',
-    marginBottom: 6,
+    marginTop: 10,
   },
   text: {
     fontSize: 16,

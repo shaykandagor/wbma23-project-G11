@@ -64,7 +64,7 @@ const WelcomeScreen = ({navigation, route}) => {
         <Button
           title="REGISTER"
           buttonStyle={{
-            backgroundColor: colors.secondary,
+            backgroundColor: colors.primary,
             borderWidth: 0,
             borderColor: 'transparent',
             borderRadius: 30,
@@ -82,7 +82,7 @@ const WelcomeScreen = ({navigation, route}) => {
         <Button
           title="LOGIN"
           buttonStyle={{
-            backgroundColor: colors.secondary,
+            backgroundColor: colors.primary,
             borderWidth: 0,
             borderColor: 'transparent',
             borderRadius: 30,

@@ -42,7 +42,7 @@ const LoginForm = () => {
       // Set user in MainContext and set isLoggedIn to true to update app state
       const {full_name: fullName} = loginResult.user;
       const {full_name, phone_number, address} = JSON.parse(fullName);
-      // delete loginResult.user.full_name;
+      delete loginResult.user.full_name;
       const userInfo = {...loginResult.user, full_name, phone_number, address};
       setUser(userInfo);
       setIsLoggedIn(true);
@@ -104,7 +104,7 @@ const LoginForm = () => {
         <Button
           title="LOG IN"
           buttonStyle={{
-            backgroundColor: colors.secondary,
+            backgroundColor: colors.primary,
             borderWidth: 0,
             borderColor: 'transparent',
             borderRadius: 30,

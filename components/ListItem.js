@@ -13,29 +13,19 @@ import {StyleSheet} from 'react-native';
 
 const width = Dimensions.get('window').width - 50;
 
-const ListItem = ({singleMedia, navigation}) => {
-  // Accessing data from the main context provider
+const ListItem = ({singleMedia, navigation, profile = true}) => {
   const {user, setUpdate, update} = useContext(MainContext);
-
-  // Fetching the deleteMedia function from the custom hook
   const {deleteMedia} = useMedia();
-
-  // Extracting the item object from the props
   const item = singleMedia;
-
-  // Function to handle media deletion
   const doDelete = () => {
     try {
-      // Displaying an alert to confirm the deletion
       Alert.alert('Delete', 'this file permanently', [
         {text: 'Cancel'},
         {
           text: 'OK',
-          // Deleting the media with the deleteMedia function
           onPress: async () => {
             const token = await AsyncStorage.getItem('userToken');
             const response = await deleteMedia(item.file_id, token);
-            // Updating the media list if the deletion is successful
             response && setUpdate(!update);
           },
         },
@@ -47,7 +37,6 @@ const ListItem = ({singleMedia, navigation}) => {
 
   return (
     <RNEListItem
-      // Navigating to the Single screen when the ListItem is pressed
       onPress={() => {
         navigation.navigate('Single', item);
       }}
@@ -80,7 +69,7 @@ const ListItem = ({singleMedia, navigation}) => {
               {item.price}
             </RNEListItem.Subtitle>
 
-            {item.user_id === user.user_id && (
+            {profile && item.user_id === user.user_id && (
               <ButtonGroup
                 buttons={['Modify', 'Delete']}
                 rounded
@@ -100,10 +89,38 @@ const ListItem = ({singleMedia, navigation}) => {
   );
 };
 
-// Defining the singleMedia and navigation PropTypes for the ListItem component
+const styles = StyleSheet.create({
+  itemContainer: {
+    backgroundColor: colors.lightgreen,
+    padding: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+    width: width / 2,
+  },
+  itemImage: {
+    width: '100%',
+    height: 200,
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  cardShadow: {
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+});
+
 ListItem.propTypes = {
   singleMedia: PropTypes.object,
   navigation: PropTypes.object,
+  profile: PropTypes.bool,
 };
 
 export default ListItem;

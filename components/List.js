@@ -5,33 +5,92 @@ import PropTypes from 'prop-types';
 import {StyleSheet} from 'react-native';
 import colors from '../config/colors.js';
 import {View} from 'react-native';
+import {useState} from 'react';
+import {shuffleArray} from '../utils/helper';
 
-// define the List component as a functional component
 const List = ({navigation, myFilesOnly = false}) => {
-  // Call the useMedia hook to fetch and filter media items
-  const {mediaArray} = useMedia(myFilesOnly);
-
-  // render the FlatList component with the fetched media items
+  const [loading, setLoading] = useState(false);
+  // Loading the app components with the useMedia hook
+  const {mediaArray, setMediaArray} = useMedia(myFilesOnly);
   return (
     <View containerStyle={styles.container}>
+      {/* <View styles={styles.categoryContainer}>
+        <Button
+          title="Women"
+          styles={styles.categoryText}
+          buttonStyle={{
+            backgroundColor: colors.primary,
+            borderRadius: 10,
+          }}
+          containerStyle={{
+            width: 100,
+          }}
+        />
+        <Button
+          title="Men"
+          styles={styles.categoryText}
+          buttonStyle={{
+            backgroundColor: colors.primary,
+            borderRadius: 10,
+          }}
+          containerStyle={{
+            width: 100,
+          }}
+        />
+        <Button
+          title="Kids"
+          styles={styles.categoryText}
+          buttonStyle={{
+            backgroundColor: colors.primary,
+            borderRadius: 10,
+          }}
+          containerStyle={{
+            width: 100,
+          }}
+        />
+      </View> */}
       <FlatList
         data={mediaArray}
         keyExtractor={(item, index) => index.toString()}
         numColumns={2}
+        refreshing={loading}
+        onRefresh={() => {
+          const shuffledArray = shuffleArray(mediaArray);
+          setMediaArray(shuffledArray);
+        }}
         contentContainerStyle={{paddingBottom: 60}}
         renderItem={({item}) => (
-          <ListItem navigation={navigation} singleMedia={item} />
+          <ListItem
+            navigation={navigation}
+            singleMedia={item}
+            profile={myFilesOnly}
+          />
         )}
       />
     </View>
   );
 };
 
-// define the navigation and myFilesOnly prop types and default values for the List component
+const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+    backgroundColor: colors.white,
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  categoryText: {
+    marginTop: 10,
+    color: colors.white,
+    fontWeight: 'bold',
+  },
+});
+
 List.propTypes = {
   navigation: PropTypes.object,
   myFilesOnly: PropTypes.bool,
 };
 
-// export the List component as the default export for the module
 export default List;

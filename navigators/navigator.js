@@ -27,14 +27,21 @@ const Stack = createNativeStackNavigator();
 // Returns the options object for each tab screen
 const getTabScreenOptions = (iconName) => {
   return {
-    tabBarIcon: () => <Icon name={iconName} color={colors.primary} />,
+    tabBarIcon: ({color}) => <Icon name={iconName} color={color} />,
   };
 };
 
 // Component for the tab navigator
 const TabScreen = () => {
   return (
-    <Tab.Navigator screenOptions={{headerShown: false}}>
+    <Tab.Navigator
+      tabBarOptions={{
+        activeBackgroundColor: colors.primary,
+        activeTintColor: colors.white,
+        inactiveBackgroundColor: colors.white,
+        inactiveTintColor: colors.darkgray,
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
@@ -53,11 +60,6 @@ const TabScreen = () => {
       <Tab.Screen
         name="Search"
         component={Search}
-        options={getTabScreenOptions('search')}
-      />
-      <Tab.Screen
-        name="Comments"
-        component={Comments}
         options={getTabScreenOptions('search')}
       />
       <Tab.Screen
@@ -87,17 +89,12 @@ const StackScreen = () => {
           <Stack.Screen
             name="Single"
             component={Single}
-            options={{
-              title: 'ReNew',
-              headerStyle: {backgroundColor: colors.primary},
-              headerTitleStyle: {color: colors.lightgray},
-              headerTintColor: colors.lightgray,
-            }}
+            options={{title: 'Item Details'}}
           />
           <Stack.Screen
             name="MyFiles"
             component={MyFiles}
-            options={{headerShown: false}}
+            options={{title: 'My Feed'}}
           />
           <Stack.Screen
             name="Modify"
@@ -119,11 +116,7 @@ const StackScreen = () => {
             component={WelcomeScreen}
             options={{headerShown: false}}
           />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{headerShown: false}}
-          />
+          <Stack.Screen name="Login" component={Login} />
         </>
       );
     }

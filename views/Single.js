@@ -1,18 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Image, View, ScreenOrientation} from 'react-native';
+import {StyleSheet, Image, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
-import {Card, Text, Icon, Button} from 'react-native-elements';
+import {Text, Icon} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {ListItem} from '@rneui/themed';
+import {Button, ListItem} from '@rneui/themed';
 import colors from '../config/colors';
-import {Dimensions, ScrollView, TouchableOpacity} from 'react-native';
+import {ScrollView} from 'react-native';
+import moment from 'moment/moment';
 
-const width = Dimensions.get('window').width;
-
-const Single = ({route}) => {
+const Single = ({route, navigation}) => {
   console.log(route.params);
   const {
     title,
@@ -20,12 +19,11 @@ const Single = ({route}) => {
     filename,
     time_added: timeAdded,
     user_id: userId,
-    media_type: type,
     file_id: fileId,
     username: userName,
   } = route.params;
 
-  const [setOwner] = useState({});
+  const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
   const {user} = useContext(MainContext);
@@ -77,110 +75,140 @@ const Single = ({route}) => {
     }
   };
 
-  const unlock = async () => {
-    try {
-      await ScreenOrientation.unlockAsync();
-    } catch (error) {
-      console.error('unlock', error.message);
-    }
-  };
-
-  const lock = async () => {
-    try {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
-      );
-    } catch (error) {
-      console.error('lock', error.message);
-    }
-  };
-
   useEffect(() => {
     getOwner();
     getLikes();
-    unlock();
-
-    // const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
-    //   console.log('orientation', evt);
-    //   if (evt.orientationInfo.orientation > 2) {
-    //     // show video in fullscreen
-    //     // if (video.current) showVideoInFullScreen();
-    //   }
-    // });
-    // return () => {
-    //   ScreenOrientation.removeOrientationChangeListener(orientSub);
-    //   lock();
-    // };
   }, []);
 
   return (
-    <View style={styles.cardShadow}>
-      <ScrollView style={styles.scrollView}>
-        <Image style={styles.itemImage} source={{uri: uploadsUrl + filename}} />
-        <View style={styles.categoryContainer}>
-          <Text style={styles.categoryText}>Women</Text>
-          <Text style={styles.categoryText}>Size 38</Text>
-          <Text style={styles.categoryText}>Trousers</Text>
-        </View>
-        <Text style={styles.itemName}>{title}</Text>
-        <Text style={styles.itemPrice}>€20</Text>
-        <Text style={styles.itemLocation}>Helsinki</Text>
-        <ListItem containerStyle={{backgroundColor: colors.lightgray}}>
-          {userLikesIt ? (
-            <Icon
-              name="favorite"
-              color={colors.primary}
-              onPress={dislikeFile}
-            />
-          ) : (
-            <Icon
-              name="favorite-border"
-              color={colors.primary}
-              onPress={likeFile}
-            />
-          )}
-          <Text style={{color: colors.primary}}>
-            Total likes: {likes.length}
-          </Text>
-        </ListItem>
-        <Text style={styles.itemDescription}>{description}</Text>
-        <Text style={styles.postedDate}>{timeAdded}</Text>
-        <TouchableOpacity style={styles.button}>
-          <Icon
-            name="envelope"
-            type="font-awesome"
-            color={colors.white}
-            style={{marginRight: 10}}
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
+        <View style={[styles.card, styles.shadowProp, styles.elevation]}>
+          <Image
+            style={styles.itemImage}
+            source={{uri: uploadsUrl + filename}}
           />
-          <Text>Leave a comment</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
+          <View style={styles.categoryContainer}>
+            <Button
+              title="Women"
+              style={styles.categoryText}
+              buttonStyle={{
+                backgroundColor: colors.primary,
+                borderRadius: 20,
+              }}
+              containerStyle={{
+                width: 100,
+              }}
+            />
+            {/* <Text style={styles.categoryText}>Women</Text> */}
+            <Button
+              title="Size 38"
+              style={styles.categoryText}
+              buttonStyle={{
+                backgroundColor: colors.primary,
+                borderRadius: 20,
+              }}
+              containerStyle={{
+                width: 100,
+              }}
+            />
+            <Button
+              title="Trouser"
+              style={styles.categoryText}
+              buttonStyle={{
+                backgroundColor: colors.primary,
+                borderRadius: 20,
+              }}
+              containerStyle={{
+                width: 100,
+              }}
+            />
+          </View>
+          <Text style={styles.itemName}>{title}</Text>
+
+          <ListItem containerStyle={{backgroundColor: colors.lightgreen}}>
+            <Icon name="person" color={colors.primary} />
+            <Text style={styles.items}>{owner.username}</Text>
+          </ListItem>
+
+          <ListItem containerStyle={{backgroundColor: colors.lightgreen}}>
+            <Icon name="euro" color={colors.primary} />
+            <Text style={styles.items}> 20</Text>
+          </ListItem>
+
+          <ListItem containerStyle={{backgroundColor: colors.lightgreen}}>
+            <Icon name="pin-drop" color={colors.primary} />
+            <Text style={styles.items}>Helsinki</Text>
+          </ListItem>
+
+          <ListItem containerStyle={{backgroundColor: colors.lightgreen}}>
+            <Icon
+              name="comment"
+              color={colors.primary}
+              onPress={() => {
+                navigation.navigate('Comments', {fileId});
+              }}
+            />
+            {userLikesIt ? (
+              <Icon
+                name="favorite"
+                color={colors.primary}
+                onPress={dislikeFile}
+              />
+            ) : (
+              <Icon
+                name="favorite-border"
+                color={colors.primary}
+                onPress={likeFile}
+              />
+            )}
+            <Text style={{color: colors.primary}}>
+              Total likes: {likes.length}
+            </Text>
+          </ListItem>
+
+          <Text style={styles.itemDescription}>{description}</Text>
+
+          <ListItem
+            containerStyle={{
+              backgroundColor: colors.lightgreen,
+            }}
+          >
+            <Icon name="schedule" color={colors.primary} />
+            <Text style={styles.postedDate}>
+              {moment(timeAdded).format('Do MMMM YYYY')}
+            </Text>
+          </ListItem>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    backgroundColor: colors.lightgray,
-    padding: 10,
-    borderRadius: 10,
-    overflow: 'scroll',
-    // width: width,
-    justifyContent: 'center',
-    marginTop: 15,
-    // width: width - 20,
+  scrollView: {
+    backgroundColor: 'white',
+    alignContent: 'center',
   },
-  cardShadow: {
+  card: {
+    backgroundColor: colors.lightgreen,
     borderRadius: 10,
-    backgroundColor: 'transparent',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: '90%',
+    marginVertical: 10,
+    marginHorizontal: 14,
+    marginRight: 14,
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
+  elevation: {
+    elevation: 10,
+    shadowColor: '#52006A',
   },
   itemImage: {
     width: '100%',
@@ -189,10 +217,11 @@ const styles = StyleSheet.create({
   categoryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 20,
   },
   categoryText: {
     marginTop: 10,
-    color: colors.primary,
+    color: colors.white,
     fontWeight: 'bold',
   },
   itemName: {
@@ -205,18 +234,10 @@ const styles = StyleSheet.create({
     left: 0,
     top: 10,
   },
-  itemPrice: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  items: {
     color: colors.primary,
-    marginTop: 10,
-  },
-  itemLocation: {
-    color: colors.primary,
-    marginTop: 10,
-  },
-  itemDescription: {
-    marginTop: 10,
+    fontSize: 15,
+    flexDirection: 'column',
   },
   sellerInfoContainer: {
     flexDirection: 'row',
@@ -229,12 +250,7 @@ const styles = StyleSheet.create({
   postedDate: {
     color: colors.primary,
     marginTop: 10,
-  },
-  scrollView: {
-    backgroundColor: colors.lightgray,
-    marginHorizontal: 20,
-    padding: 15,
-    marginBottom: 20,
+    flexDirection: 'row',
   },
   button: {
     flexDirection: 'row',
@@ -248,6 +264,7 @@ const styles = StyleSheet.create({
 
 Single.propTypes = {
   route: PropTypes.object,
+  navigation: PropTypes.object,
 };
 
 export default Single;

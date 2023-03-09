@@ -69,7 +69,7 @@ const UpdateUserForm = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Card>
+      <Card containerStyle={{marginTop: 50, borderRadius: 20}}>
         <Card.Title>Update Profile</Card.Title>
         <Controller
           control={control}
@@ -181,7 +181,9 @@ UpdateUserForm.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
   logo: {
     width: 250,
     height: 200,
