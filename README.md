@@ -33,10 +33,6 @@ ReNew is a mobile app that connects buyers and sellers of second-hand clothing i
 Second-hand clothing app is to provide a user-friendly platform for buyers and sellers to buy and sell high-quality, gently-used clothing items
 
 
-### In-app Technology
-1.Frontend: React Native and React
-1.Backend: [MEDIA API DOCS](https://media.mw.metropolia.fi/wbma/docs/)
-
 ### User Target and End Users
 1. A fashion-conscious individual who is looking for unique and vintage clothing items.
 1. A budget-conscious consumer who is looking for affordable clothing options.
@@ -46,8 +42,13 @@ Second-hand clothing app is to provide a user-friendly platform for buyers and s
 
 <!-- ABOUT THE PROJECT -->
 
-### Built With
+### Built With                                                                                                                                                     
 * [![React][React.js]][React-url]
+
+1.Frontend: React Native and React
+1.Backend: [MEDIA API DOCS](https://media.mw.metropolia.fi/wbma/docs/)                                                                                                                                                    
+                                                                                                                                                     
+                                                                                                                                                     
 
 <!-- GETTING STARTED -->
 ## Getting Started
