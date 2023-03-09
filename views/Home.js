@@ -1,11 +1,14 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView, Platform, StatusBar} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 import List from '../components/List';
+import colors from '../config/colors.js';
 import PropTypes from 'prop-types';
+import Headers from '../components/Header';
 
 const Home = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
+      <Headers label="ReNew" />
       <List navigation={navigation} />
     </SafeAreaView>
   );
@@ -14,8 +17,8 @@ const Home = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: colors.white,
+    paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
 });
 

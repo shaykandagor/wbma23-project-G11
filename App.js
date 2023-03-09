@@ -1,6 +1,6 @@
 import React from 'react';
 import {StatusBar} from 'expo-status-bar';
-import Navigator from './navigators/Navigator';
+import Navigator from './navigators/navigator.js';
 import {MainProvider} from './contexts/MainContext';
 import OfflineNotice from './components/OfflineNotice';
 

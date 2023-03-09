@@ -3,10 +3,15 @@ import {uploadsUrl} from '../utils/variables';
 import {MainContext} from '../contexts/MainContext';
 import {useContext} from 'react';
 import {ButtonGroup} from '@rneui/themed';
-import {Alert} from 'react-native';
+import {Alert, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMedia} from '../hooks/ApiHooks';
-import {Avatar, ListItem as RNEListItem} from '@rneui/themed';
+import {Image, ListItem as RNEListItem} from '@rneui/themed';
+import colors from '../config/colors';
+import {Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
+
+const width = Dimensions.get('window').width - 50;
 
 const ListItem = ({singleMedia, navigation}) => {
   // Accessing data from the main context provider
@@ -39,6 +44,7 @@ const ListItem = ({singleMedia, navigation}) => {
       console.log(error);
     }
   };
+
   return (
     <RNEListItem
       // Navigating to the Single screen when the ListItem is pressed
@@ -46,30 +52,50 @@ const ListItem = ({singleMedia, navigation}) => {
         navigation.navigate('Single', item);
       }}
     >
-      {/* Displaying the media thumbnail with the Avatar component */}
-      <Avatar size="large" source={{uri: uploadsUrl + item.thumbnails?.w160}} />
-
-      <RNEListItem.Content>
-        <RNEListItem.Title>{item.title}</RNEListItem.Title>
-        <RNEListItem.Subtitle numberOfLines={3}>
-          {item.description}
-        </RNEListItem.Subtitle>
-        {/* Displaying Modify and Delete buttons if the media is uploaded by the user */}
-        {item.user_id === user.user_id && (
-          <ButtonGroup
-            buttons={['Modify', 'Delete']}
-            rounded
-            onPress={(index) => {
-              if (index === 0) {
-                navigation.navigate('Modify', {file: item});
-              } else {
-                doDelete();
-              }
-            }}
+      <View style={styles.cardShadow}>
+        <View style={styles.itemContainer}>
+          <Image
+            source={{uri: uploadsUrl + item.thumbnails?.w160}}
+            containerStyle={styles.itemImage}
           />
-        )}
-      </RNEListItem.Content>
-      <RNEListItem.Chevron />
+
+          <RNEListItem.Content
+            containerStyle={{backgroundColor: colors.lightgray}}
+          >
+            <RNEListItem.Title
+              style={{
+                fontWeight: 'bold',
+                fontSize: 13,
+                marginTop: 10,
+                marginRight: 10,
+              }}
+            >
+              {item.title}
+            </RNEListItem.Title>
+            <RNEListItem.Subtitle
+              numberOfLines={3}
+              style={{color: colors.secondary}}
+            >
+              {'20€'}
+              {item.price}
+            </RNEListItem.Subtitle>
+
+            {item.user_id === user.user_id && (
+              <ButtonGroup
+                buttons={['Modify', 'Delete']}
+                rounded
+                onPress={(index) => {
+                  if (index === 0) {
+                    navigation.navigate('Modify', {file: item});
+                  } else {
+                    doDelete();
+                  }
+                }}
+              />
+            )}
+          </RNEListItem.Content>
+        </View>
+      </View>
     </RNEListItem>
   );
 };

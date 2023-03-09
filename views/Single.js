@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Image, View, ScreenOrientation} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
@@ -7,6 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {ListItem} from '@rneui/themed';
+import colors from '../config/colors';
+import {Dimensions, ScrollView, TouchableOpacity} from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const Single = ({route}) => {
   console.log(route.params);
@@ -18,13 +22,12 @@ const Single = ({route}) => {
     user_id: userId,
     media_type: type,
     file_id: fileId,
+    username: userName,
   } = route.params;
 
-  const video = useRef(null);
-  const [owner, setOwner] = useState({});
+  const [setOwner] = useState({});
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
@@ -92,14 +95,6 @@ const Single = ({route}) => {
     }
   };
 
-  const showVideoInFullScreen = async () => {
-    try {
-      await video.current.presentFullscreenPlayer();
-    } catch (error) {
-      console.error('showVideoInFullScreen', error.message);
-    }
-  };
-
   useEffect(() => {
     getOwner();
     getLikes();
@@ -109,67 +104,95 @@ const Single = ({route}) => {
     //   console.log('orientation', evt);
     //   if (evt.orientationInfo.orientation > 2) {
     //     // show video in fullscreen
-    //     if (video.current) showVideoInFullScreen();
+    //     // if (video.current) showVideoInFullScreen();
     //   }
     // });
-
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(orientSub);
-      lock();
-    };
+    // return () => {
+    //   ScreenOrientation.removeOrientationChangeListener(orientSub);
+    //   lock();
+    // };
   }, []);
 
   return (
-    <Card>
-      <Image style={styles.itemImage} source={{uri: uploadsUrl + filename}} />
-      <View style={styles.categoryContainer}>
-        <Text style={styles.categoryText}>Women</Text>
-        <Text style={styles.categoryText}>Size 38</Text>
-        <Text style={styles.categoryText}>Trousers</Text>
-      </View>
-      <Text style={styles.itemName}>{title}</Text>
-      <ListItem>
-        {userLikesIt ? (
-          <Icon name="favorite" color="red" onPress={dislikeFile} />
-        ) : (
-          <Icon name="favorite-border" onPress={likeFile} />
-        )}
-        <Text>Total likes: {likes.length}</Text>
-      </ListItem>
-
-      <Text style={styles.itemPrice}>$100</Text>
-      <Text style={styles.itemLocation}>Location</Text>
-      <Text style={styles.itemDescription}>{description}</Text>
-      <View style={styles.sellerInfoContainer}>
-        <Text style={styles.sellerName}>Seller Name</Text>
-        <Icon
-          name="shopping-bag"
-          type="font-awesome"
-          color="#517fa4"
-          style={styles.shoppingBagIcon}
-        />
-        <Text style={styles.sellerItemsCount}>20</Text>
-      </View>
-      <Text style={styles.postedDate}>{timeAdded}</Text>
-      <Button
-        icon={<Icon name="envelope" type="font-awesome" color="#ffffff" />}
-        title="Send message"
-      />
-    </Card>
+    <View style={styles.cardShadow}>
+      <ScrollView style={styles.scrollView}>
+        <Image style={styles.itemImage} source={{uri: uploadsUrl + filename}} />
+        <View style={styles.categoryContainer}>
+          <Text style={styles.categoryText}>Women</Text>
+          <Text style={styles.categoryText}>Size 38</Text>
+          <Text style={styles.categoryText}>Trousers</Text>
+        </View>
+        <Text style={styles.itemName}>{title}</Text>
+        <Text style={styles.itemPrice}>€20</Text>
+        <Text style={styles.itemLocation}>Helsinki</Text>
+        <ListItem containerStyle={{backgroundColor: colors.lightgray}}>
+          {userLikesIt ? (
+            <Icon
+              name="favorite"
+              color={colors.primary}
+              onPress={dislikeFile}
+            />
+          ) : (
+            <Icon
+              name="favorite-border"
+              color={colors.primary}
+              onPress={likeFile}
+            />
+          )}
+          <Text style={{color: colors.primary}}>
+            Total likes: {likes.length}
+          </Text>
+        </ListItem>
+        <Text style={styles.itemDescription}>{description}</Text>
+        <Text style={styles.postedDate}>{timeAdded}</Text>
+        <TouchableOpacity style={styles.button}>
+          <Icon
+            name="envelope"
+            type="font-awesome"
+            color={colors.white}
+            style={{marginRight: 10}}
+          />
+          <Text>Leave a comment</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  itemContainer: {
+    backgroundColor: colors.lightgray,
+    padding: 10,
+    borderRadius: 10,
+    overflow: 'scroll',
+    // width: width,
+    justifyContent: 'center',
+    marginTop: 15,
+    // width: width - 20,
+  },
+  cardShadow: {
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
   itemImage: {
     width: '100%',
-    height: 200,
+    height: 450,
   },
   categoryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   categoryText: {
-    color: '#517fa4',
+    marginTop: 10,
+    color: colors.primary,
     fontWeight: 'bold',
   },
   itemName: {
@@ -179,17 +202,17 @@ const styles = StyleSheet.create({
   },
   heartIcon: {
     position: 'absolute',
-    right: 0,
+    left: 0,
     top: 10,
   },
   itemPrice: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#f50',
+    color: colors.primary,
     marginTop: 10,
   },
   itemLocation: {
-    color: '#517fa4',
+    color: colors.primary,
     marginTop: 10,
   },
   itemDescription: {
@@ -203,16 +226,23 @@ const styles = StyleSheet.create({
   sellerName: {
     fontWeight: 'bold',
   },
-  shoppingBagIcon: {
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  sellerItemsCount: {
-    color: '#517fa4',
-  },
   postedDate: {
-    color: '#517fa4',
+    color: colors.primary,
     marginTop: 10,
+  },
+  scrollView: {
+    backgroundColor: colors.lightgray,
+    marginHorizontal: 20,
+    padding: 15,
+    marginBottom: 20,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    padding: 10,
+    marginBottom: 30,
   },
 });
 

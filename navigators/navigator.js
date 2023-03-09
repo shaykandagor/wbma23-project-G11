@@ -27,21 +27,14 @@ const Stack = createNativeStackNavigator();
 // Returns the options object for each tab screen
 const getTabScreenOptions = (iconName) => {
   return {
-    tabBarIcon: ({color}) => <Icon name={iconName} color={color} />,
+    tabBarIcon: () => <Icon name={iconName} color={colors.primary} />,
   };
 };
 
 // Component for the tab navigator
 const TabScreen = () => {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeBackgroundColor: colors.secondary,
-        activeTintColor: colors.white,
-        inactiveBackgroundColor: colors.gray,
-        inactiveTintColor: colors.black,
-      }}
-    >
+    <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
         name="Home"
         component={Home}
@@ -94,22 +87,22 @@ const StackScreen = () => {
           <Stack.Screen
             name="Single"
             component={Single}
-            options={{title: 'Item Details'}}
+            options={{
+              title: 'ReNew',
+              headerStyle: {backgroundColor: colors.primary},
+              headerTitleStyle: {color: colors.lightgray},
+              headerTintColor: colors.lightgray,
+            }}
           />
           <Stack.Screen
             name="MyFiles"
             component={MyFiles}
-            options={{title: 'My Feed'}}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="Modify"
             component={Modify}
-            options={{title: 'Modify Item'}}
-          />
-          <Stack.Screen
-            name="UpdateUser"
-            component={UpdateUser}
-            options={{title: 'Update Profile'}}
+            options={{headerShown: false}}
           />
         </>
       );
@@ -121,7 +114,11 @@ const StackScreen = () => {
             component={WelcomeScreen}
             options={{headerShown: false}}
           />
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
         </>
       );
     }
