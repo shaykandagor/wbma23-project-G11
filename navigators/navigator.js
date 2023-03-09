@@ -102,7 +102,12 @@ const StackScreen = () => {
           <Stack.Screen
             name="Modify"
             component={Modify}
-            options={{headerShown: false}}
+            options={{title: 'Modify Item'}}
+          />
+          <Stack.Screen
+            name="UpdateUser"
+            component={UpdateUser}
+            options={{title: 'Update Profile'}}
           />
         </>
       );
