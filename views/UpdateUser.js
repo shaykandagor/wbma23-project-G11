@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,18 +7,16 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import {Button, Image, Text} from '@rneui/themed';
-import LoginForm from '../components/LoginForm';
-import RegisterForm from '../components/RegisterForm';
 import colors from '../config/colors';
-import Input from 'react-native-input-style';
+import UpdateUserForm from '../components/UpdateUserForm';
+import {Image} from '@rneui/themed';
 
 // Login function is called when the login button is pressed
-const Login = ({navigation, route}) => {
-  const [isRegister, setisRegister] = useState(route.params.register);
+const UpdateUser = ({navigation, route}) => {
+  // const [isUpdate, setisUpdate] = useState(route.params);
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView>
       <View style={styles.card}>
         <Image
           style={styles.logo}
@@ -33,20 +30,7 @@ const Login = ({navigation, route}) => {
         activeOpacity={1}
       >
         <KeyboardAvoidingView style={styles.container}>
-          {isRegister ? <LoginForm /> : <RegisterForm />}
-          <View style={styles.text}>
-            <Text>
-              {isRegister ? 'No account yet?' : 'Already have an account?'}
-            </Text>
-            <Button
-              type="clear"
-              title={isRegister ? 'Register' : 'Login'}
-              onPress={() => {
-                setisRegister(!isRegister);
-              }}
-              color={colors.secondary}
-            />
-          </View>
+          <UpdateUserForm navigation={navigation} />
         </KeyboardAvoidingView>
       </TouchableOpacity>
     </ScrollView>
@@ -54,21 +38,19 @@ const Login = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: colors.lightgreen,
-  },
   container: {
     padding: 16,
+    backgroundColor: colors.lightgreen,
     flex: 1,
   },
   card: {
+    backgroundColor: colors.lightgreen,
     alignItems: 'center',
     flex: 1,
-    paddingTop: 10,
   },
   logo: {
     width: 250,
-    height: 250,
+    height: 200,
   },
   text: {
     paddingTop: 30,
@@ -79,9 +61,9 @@ const styles = StyleSheet.create({
   },
 });
 
-Login.propTypes = {
+UpdateUser.propTypes = {
   navigation: PropTypes.object,
   route: PropTypes.object,
 };
 
-export default Login;
+export default UpdateUser;

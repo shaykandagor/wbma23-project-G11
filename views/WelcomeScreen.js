@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import colors from '../config/colors';
 import {Button, Image, Text} from '@rneui/themed';
@@ -9,8 +9,12 @@ import {
   StyleSheet,
 } from 'react-native';
 import {MainContext} from '../contexts/MainContext';
+import {useUser} from '../hooks/ApiHooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const WelcomeScreen = ({navigation}) => {
+const WelcomeScreen = ({navigation, route}) => {
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
+  const {getUserByToken} = useUser();
   const {isLoggedIn} = useContext(MainContext);
   console.log(isLoggedIn);
   const handleRegistrationPress = () => {
@@ -21,6 +25,29 @@ const WelcomeScreen = ({navigation}) => {
     navigation.navigate('Login', {register: true});
   };
 
+  // Saves the value of userToken saved in AsyncStorage as userToken
+  const checkToken = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      // If no there is no token available, do nothing
+      if (userToken === null) return;
+      const userData = await getUserByToken(userToken);
+      const {full_name: fullName} = userData;
+      const {full_name, phone_number, address} = JSON.parse(fullName);
+      delete userData.full_name;
+      const userInfo = {...userData, full_name, phone_number, address};
+      setUser(userInfo);
+      console.log('checkToken', userInfo);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error('checkToken', error);
+    }
+  };
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
   return (
     <ImageBackground
       style={styles.background}
@@ -30,25 +57,45 @@ const WelcomeScreen = ({navigation}) => {
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
-          source={require('../assets/renewlogo.jpg')}
+          source={require('../assets/renewLogo.png')}
         ></Image>
-        <Text style={styles.logoText}>Giving Second Home to Great Stuff</Text>
       </View>
       <TouchableOpacity style={styles.registerButton}>
         <Button
-          title="CREATE AN ACCOUNT"
-          color={colors.secondary}
-          style={styles.buttonText}
+          title="REGISTER"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderWidth: 0,
+            borderColor: 'transparent',
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 350,
+            marginHorizontal: 50,
+            marginVertical: 10,
+          }}
+          titleStyle={{fontWeight: 'bold'}}
           onPress={handleRegistrationPress}
-        ></Button>
+        />
       </TouchableOpacity>
       <TouchableOpacity style={styles.loginButton}>
         <Button
-          title="LOG IN IF YOU HAVE AN ACCOUNT"
-          color={colors.secondary}
-          style={styles.buttonText}
+          title="LOGIN"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderWidth: 0,
+            borderColor: 'transparent',
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 350,
+            marginHorizontal: 50,
+            marginVertical: 10,
+            marginBottom: 30,
+          }}
+          titleStyle={{fontWeight: 'bold'}}
           onPress={handleLoginPress}
-        ></Button>
+        />
       </TouchableOpacity>
     </ImageBackground>
   );
@@ -59,15 +106,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    width: '100%',
   },
   logoContainer: {
     position: 'absolute',
     alignItems: 'center',
-    top: 100,
+    top: 70,
   },
   logo: {
-    width: 250,
-    height: 200,
+    width: 400,
+    height: 400,
   },
   logoText: {
     color: colors.black,
@@ -75,27 +123,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  registerButton: {
-    width: '100%',
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginButton: {
-    width: '100%',
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: colors.white,
-    fontSize: 13,
-    fontWeight: 'bold',
-  },
 });
 
 WelcomeScreen.propTypes = {
   navigation: PropTypes.object,
+  route: PropTypes.object,
 };
 
 export default WelcomeScreen;

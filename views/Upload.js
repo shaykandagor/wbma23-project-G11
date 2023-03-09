@@ -37,8 +37,8 @@ const Upload = ({navigation}) => {
     reset,
   } = useForm({
     defaultValues: {
-      // category: '',
-      // size: '',
+      // categoryType: '',
+      // categoryWMK: '',
       price: '',
       title: '',
       description: '',
@@ -77,6 +77,12 @@ const Upload = ({navigation}) => {
       };
       const tagResult = await postTag(appTag, token);
       console.log('tag result', tagResult);
+
+      const tagResultCategory = await postTag(setCategoryType, token);
+      console.log('tag result', tagResultCategory);
+
+      const tagResultWMK = await postTag(setWMKcategory, token);
+      console.log('tag result', tagResultWMK);
 
       Alert.alert('Upload Ok', 'File id: ' + result.file_id, [
         {
@@ -354,6 +360,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     borderRadius: 8,
     margin: 14,
+    alignSelf: 'center',
   },
   pickImage: {
     height: 200,
@@ -364,7 +371,7 @@ const styles = StyleSheet.create({
     margin: 14,
   },
   imageContainer: {
-    width:'100%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -376,6 +383,8 @@ const styles = StyleSheet.create({
     width: 225,
     marginBottom: 20,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.secondary,
   },
   dropdownContainer: {
     backgroundColor: colors.lightgreen,

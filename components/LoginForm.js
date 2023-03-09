@@ -8,8 +8,13 @@ import {View, StyleSheet} from 'react-native';
 import colors from '../config/colors';
 
 const LoginForm = () => {
+  // Retrieve setIsLoggedIn and setUser from MainContext using useContext hook
   const {setIsLoggedIn, setUser} = useContext(MainContext);
+
+  // Import postLogin function from useAuthentication custom hook
   const {postLogin} = useAuthentication();
+
+  // Define control and form validation variables using useForm hook
   const {
     control,
     handleSubmit,
@@ -21,28 +26,37 @@ const LoginForm = () => {
     },
   });
 
+  // Handle login button press
   const logIn = async (loginData) => {
     console.log('Login button pressed', loginData);
     // const data = {username: 'shaynek', password: 'secret254'};
-    // Used to save the data of the user as a token
     // So if the user logs in again the device has the user's data therefore a successfull login
     try {
+      // Call postLogin function to attempt login with user credentials
       const loginResult = await postLogin(loginData);
       console.log('logIn', loginResult);
+
+      // Save user token to AsyncStorage
       await AsyncStorage.setItem('userToken', loginResult.token);
-      setUser(loginResult.user);
+
+      // Set user in MainContext and set isLoggedIn to true to update app state
+      const {full_name: fullName} = loginResult.user;
+      const {full_name, phone_number, address} = JSON.parse(fullName);
+      // delete loginResult.user.full_name;
+      const userInfo = {...loginResult.user, full_name, phone_number, address};
+      setUser(userInfo);
       setIsLoggedIn(true);
     } catch (error) {
       console.error('LogIn', error);
+
       // TODO: Notify user about failed login attempt
     }
   };
 
   return (
     <View style={styles.container}>
-      <Card>
-        <Card.Title>RENEW</Card.Title>
-
+      <Card containerStyle={{marginTop: 15, borderRadius: 20}}>
+        {/* Render username input field with form validation */}
         <Controller
           control={control}
           rules={{
@@ -51,6 +65,10 @@ const LoginForm = () => {
           render={({field: {onChange, onBlur, value}}) => (
             <Input
               placeholder="Username"
+              leftIcon={{
+                name: 'person',
+                color: colors.lightgray,
+              }}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -60,6 +78,7 @@ const LoginForm = () => {
           )}
           name="username"
         />
+        {/* Render password input field with form validation */}
         <Controller
           control={control}
           rules={{
@@ -69,6 +88,10 @@ const LoginForm = () => {
             <Input
               placeholder="Password"
               onBlur={onBlur}
+              leftIcon={{
+                name: 'lock',
+                color: colors.lightgray,
+              }}
               onChangeText={onChange}
               value={value}
               secureTextEntry={true}
@@ -77,10 +100,23 @@ const LoginForm = () => {
           )}
           name="password"
         />
+        {/* Render login button */}
         <Button
           title="LOG IN"
+          buttonStyle={{
+            backgroundColor: colors.secondary,
+            borderWidth: 0,
+            borderColor: 'transparent',
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 300,
+            marginHorizontal: 50,
+            marginVertical: 10,
+            alignSelf: 'center',
+          }}
+          titleStyle={{fontWeight: 'bold'}}
           onPress={handleSubmit(logIn)}
-          color={colors.secondary}
         />
       </Card>
     </View>
