@@ -78,11 +78,11 @@ const Upload = ({navigation}) => {
       const tagResult = await postTag(appTag, token);
       console.log('tag result', tagResult);
 
-      const tagResultCategory = await postTag(setCategoryType, token);
+      /* const tagResultCategory = await postTag(setCategoryType, token);
       console.log('tag result', tagResultCategory);
 
       const tagResultWMK = await postTag(setWMKcategory, token);
-      console.log('tag result', tagResultWMK);
+      console.log('tag result', tagResultWMK); */
 
       Alert.alert('Upload Ok', 'File id: ' + result.file_id, [
         {
