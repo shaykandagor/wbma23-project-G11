@@ -1,7 +1,6 @@
 import React, {useContext, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card} from '@rneui/themed';
-import Input from 'react-native-input-style';
+import {Card, Button} from '@rneui/themed';
 import {Controller, useForm} from 'react-hook-form';
 import {
   ActivityIndicator,
@@ -11,13 +10,14 @@ import {
   StyleSheet,
   View,
   Alert,
+  TextInput,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
+import {Dropdown} from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import colors from '../config/colors';
-import {SelectList} from 'react-native-dropdown-select-list';
 import {appId} from '../utils/variables';
 
 const Upload = ({navigation}) => {
@@ -37,12 +37,13 @@ const Upload = ({navigation}) => {
     reset,
   } = useForm({
     defaultValues: {
-      // category: '',
-      // size: '',
+      // categoryType: '',
+      // categoryWMK: '',
+      price: '',
       title: '',
       description: '',
-      mode: 'onChange',
     },
+    mode: 'onChange',
   });
 
   // This function enables the user to upload a file with its info
@@ -52,6 +53,7 @@ const Upload = ({navigation}) => {
     const formData = new FormData();
     // formData.append('category', JSON.stringify(moreFileData));
     // formData.append('size', JSON.stringify(moreFileData));
+    // formData.append('price', JSON.stringify(moreFileData));
     formData.append('title', data.title);
     formData.append('description', data.description);
     const filename = mediafile.uri.split('/').pop();
@@ -75,6 +77,12 @@ const Upload = ({navigation}) => {
       };
       const tagResult = await postTag(appTag, token);
       console.log('tag result', tagResult);
+
+      /* const tagResultCategory = await postTag(setCategoryType, token);
+      console.log('tag result', tagResultCategory);
+
+      const tagResultWMK = await postTag(setWMKcategory, token);
+      console.log('tag result', tagResultWMK); */
 
       Alert.alert('Upload Ok', 'File id: ' + result.file_id, [
         {
@@ -103,7 +111,7 @@ const Upload = ({navigation}) => {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [9, 16],
         quality: 0.5,
       });
 
@@ -118,32 +126,22 @@ const Upload = ({navigation}) => {
       console.log(error);
     }
   };
+  const categoryWMKData = [
+    {label: 'Women', categoryWMK: 'women'},
+    {label: 'Men', categoryWMK: 'men'},
+    {label: 'Kids', categoryWMK: 'kids'},
+  ];
+  const categorytypeData = [
+    {label: 'Clothes', value: 'Clothes'},
+    {label: 'Shoes', value: 'Shoes'},
+    {label: 'Aceessories', value: 'Aceessories'},
+  ];
 
-  const [/* selected,*/ setSelected] = React.useState('');
+  // const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
+  const [dropDownWMK, setWMKcategory] = useState(null);
+  const [categorytype, setCategoryType] = useState(null);
 
-  const category1 = [
-    {key: '1', value: 'Women'},
-    {key: '2', value: 'Men'},
-    {key: '3', value: 'Kids'},
-  ];
-  const category2 = [
-    {key: '1', value: 'Clothes'},
-    {key: '2', value: 'Shoes'},
-    {key: '3', value: 'Aceessories'},
-  ];
-  const category3 = [
-    {key: '1', value: 'Baby'},
-    {key: '2', value: '1-2years'},
-    {key: '3', value: '2-3years'},
-    {key: '4', value: '3-4years'},
-    {key: '5', value: '4-5years'},
-    {key: '6', value: '6-7years'},
-    {key: '7', value: '7-9years'},
-    {key: '8', value: '9-11years'},
-    {key: '9', value: '11-13years'},
-    {key: '10', value: '13-15years'},
-    {key: '11', value: '15-17years'},
-  ];
   return (
     <ScrollView style={[styles.wholeview]}>
       <TouchableOpacity
@@ -151,160 +149,173 @@ const Upload = ({navigation}) => {
         style={{flex: 1}}
         activeOpacity={1}
       >
-        <View style={[styles.card, styles.shadowProp]}>
-          <Card.Image
-            source={{
-              uri: mediafile.uri || 'https://picsum.photos/id/237/200/300',
-            }}
-          />
-          {/* <Controller
-            control={control}
-            rules={{
-              required: {value: true, message: 'Category is required.'},
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <Input
-                placeholder="Select Category"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                errorMessage={errors.category && errors.category.message}
+        <View style={[styles.wholeview]}>
+          <View style={[styles.card, styles.shadowProp, styles.elevation]}>
+            {/* <Button
+              buttonStyle={{
+                height: 200,
+                backgroundColor: colors.lightgreen,
+                borderWidth: 1,
+                borderColor: colors.secondary,
+                borderRadius: 5,
+                margin: 14,
+              }}
+              title="Pick an image"
+              onPress={pickFile}
+              containerViewStyle={{
+                borderRadius: 20,
+                elevation: 15,
+              }}
+            /> */}
+            <View style={styles.imageContainer}>
+              <Card.Image
+                style={styles.imagestyle}
+                placeholderStyle={{}}
+                onPress={pickFile}
+                source={{
+                  uri:
+                    mediafile.uri ||
+                    'https://t4.ftcdn.net/jpg/04/81/13/43/240_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg',
+                }}
               />
-            )}
-            name="category"
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: {value: true, message: 'Size is required.'},
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <Input
-                placeholder="Choose Size"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                errorMessage={errors.size && errors.size.message}
-              />
-            )}
-            name="size"
-          /> */}
-          <SelectList
-            setSelected={(val) => setSelected(val)}
-            data={category1}
-            save="value"
-            placeholder="Select Category"
-            search={false}
-            boxStyles={{
-              marginHorizontal: 14,
-              marginVertical: 8,
-              borderRadius: 5,
-              backgroundColor: colors.secondary,
-            }}
-          />
-          <SelectList
-            setSelected={(val) => setSelected(val)}
-            data={category2}
-            save="value"
-            placeholder="Select Category"
-            search={false}
-            boxStyles={{
-              marginHorizontal: 14,
-              marginVertical: 8,
-              borderRadius: 5,
-              backgroundColor: colors.secondary,
-            }}
-          />
-          <SelectList
-            setSelected={(val) => setSelected(val)}
-            data={category3}
-            save="value"
-            placeholder="Select Size"
-            search={false}
-            boxStyles={{
-              marginHorizontal: 14,
-              marginVertical: 8,
-              borderRadius: 5,
-              backgroundColor: colors.secondary,
-            }}
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: {value: true, message: 'Title is required.'},
-              minLength: {
-                value: 3,
-                message: 'Title min length is 3 characters.',
-              },
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <Input
-                label="Title"
-                labelStyle={{backgroundColor: colors.lightgray}}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                errorMessage={errors.title && errors.title.message}
-                outlined
-                borderColor={colors.secondary}
-              />
-            )}
-            name="title"
-          />
-          <Controller
-            control={control}
-            rules={{
-              minLength: {
-                value: 5,
-                message: 'Description min length is 5 characters.',
-              },
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <Input
-                label="Write a description here.."
-                labelStyle={{backgroundColor: colors.lightgray}}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                outlined
-                borderColor={colors.secondary}
-              />
-            )}
-            name="description"
-          />
+            </View>
+            <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Title is required.'},
+                minLength: {
+                  value: 3,
+                  message: 'Title min length is 3 characters.',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.inputStyle}
+                  multiline
+                  numberOfLines={1}
+                  placeholder="Title"
+                  placeholderTextColor={colors.black}
+                  labelStyle={{backgroundColor: colors.lightgray}}
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  autoCapitalize="none"
+                  errorMessage={errors.title && errors.title.message}
+                  outlined
+                  borderColor={colors.secondary}
+                />
+              )}
+              name="title"
+            />
+            <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Description is required.'},
+                minLength: {
+                  value: 5,
+                  message: 'Description min length is 5 characters.',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.inputStyle}
+                  multiline
+                  numberOfLines={4}
+                  label="Write a description here.."
+                  placeholder="Write a description here.."
+                  textAlignVertical="top"
+                  placeholderTextColor={colors.black}
+                  labelStyle={{backgroundColor: colors.lightgray}}
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  autoCapitalize="none"
+                  outlined
+                  borderColor={colors.secondary}
+                />
+              )}
+              name="description"
+            />
+            {/* <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Price is required.'},
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.inputStyle}
+                  label="Price"
+                  placeholder="Price"
+                  placeholderTextColor={colors.black}
+                  labelStyle={{backgroundColor: colors.lightgray}}
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  autoCapitalize="none"
+                  outlined
+                  borderColor={colors.secondary}
+                />
+              )}
+              name="price"
+              /> */}
 
-          <Button
-            title="Pick an image"
-            onPress={pickFile}
-            buttonStyle={{
-              backgroundColor: colors.secondary,
-              borderRadius: 5,
-              margin: 14,
-            }}
-            containerViewStyle={{
-              borderRadius: 20,
-              elevation: 15,
-            }}
-          />
-          <Button
-            buttonStyle={{
-              backgroundColor: colors.secondary,
-              borderRadius: 5,
-              margin: 14,
-            }}
-            containerViewStyle={{
-              borderRadius: 20,
-              elevation: 15,
-            }}
-            disabled={!mediafile.uri}
-            title="Upload"
-            onPress={handleSubmit(uploadFile)}
-          />
-          {loading && <ActivityIndicator size="large" />}
+            <View style={styles.DropdownContainer}>
+              <Dropdown
+                style={[
+                  styles.dropdown,
+                  isFocus && {borderColor: colors.secondary},
+                ]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                iconStyle={styles.iconStyle}
+                data={categoryWMKData}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={'Select category'}
+                value={dropDownWMK}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  setWMKcategory(item.value);
+                  setIsFocus(false);
+                }}
+              />
+              <Dropdown
+                style={[
+                  styles.dropdown,
+                  isFocus && {borderColor: colors.secondary},
+                ]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                iconStyle={styles.iconStyle}
+                data={categorytypeData}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? 'Select category' : '...'}
+                value={categorytype}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  setCategoryType(item.value);
+                  setIsFocus(false);
+                }}
+              />
+            </View>
+            <Button
+              disabled={!mediafile.uri}
+              title="POST"
+              onPress={handleSubmit(uploadFile)}
+              buttonStyle={{backgroundColor: colors.secondary, borderRadius: 8}}
+              containerStyle={{
+                width: 200,
+                marginHorizontal: 50,
+                marginVertical: 10,
+              }}
+            />
+            {loading && <ActivityIndicator size="large" />}
+          </View>
         </View>
       </TouchableOpacity>
     </ScrollView>
@@ -313,9 +324,20 @@ const Upload = ({navigation}) => {
 const styles = StyleSheet.create({
   wholeview: {
     backgroundColor: 'white',
+    alignContent: 'center',
+  },
+  inputStyle: {
+    marginBottom: 20,
+    marginHorizontal: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 13,
+    borderWidth: 1,
+    borderColor: colors.secondary,
+    alignItems: 'stretch',
+    borderRadius: 8,
   },
   card: {
-    backgroundColor: colors.lightgray,
+    backgroundColor: colors.lightgreen,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -323,6 +345,73 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 14,
     marginRight: 14,
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
+  elevation: {
+    elevation: 10,
+    shadowColor: '#52006A',
+  },
+  buttonStyle: {
+    backgroundColor: colors.secondary,
+    borderRadius: 8,
+    margin: 14,
+    alignSelf: 'center',
+  },
+  pickImage: {
+    height: 200,
+    backgroundColor: colors.lightgreen,
+    borderWidth: 1,
+    borderColor: colors.secondary,
+    borderRadius: 5,
+    margin: 14,
+  },
+  imageContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imagestyle: {
+    resizeMode: 'center',
+    height: 400,
+    width: 225,
+    marginBottom: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.secondary,
+  },
+  dropdownContainer: {
+    backgroundColor: colors.lightgreen,
+    padding: 16,
+    marginHorizontal: 20,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: colors.secondary,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginBottom: 10,
+    marginHorizontal: 20,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  placeholderStyle: {
+    fontSize: 14,
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
   },
 });
 
