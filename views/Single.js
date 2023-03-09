@@ -1,18 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Image, View, ScreenOrientation} from 'react-native';
+import {StyleSheet, Image, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
-import {Card, Text, Icon, Button} from 'react-native-elements';
+import {Text, Icon} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {ListItem} from '@rneui/themed';
 import colors from '../config/colors';
-import {Dimensions, ScrollView, TouchableOpacity} from 'react-native';
+import {ScrollView} from 'react-native';
+import moment from 'moment/moment';
 
-const width = Dimensions.get('window').width;
-
-const Single = ({route}) => {
+const Single = ({route, navigation}) => {
   console.log(route.params);
   const {
     title,
@@ -20,7 +19,6 @@ const Single = ({route}) => {
     filename,
     time_added: timeAdded,
     user_id: userId,
-    media_type: type,
     file_id: fileId,
     username: userName,
   } = route.params;
@@ -77,40 +75,9 @@ const Single = ({route}) => {
     }
   };
 
-  const unlock = async () => {
-    try {
-      await ScreenOrientation.unlockAsync();
-    } catch (error) {
-      console.error('unlock', error.message);
-    }
-  };
-
-  const lock = async () => {
-    try {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
-      );
-    } catch (error) {
-      console.error('lock', error.message);
-    }
-  };
-
   useEffect(() => {
     getOwner();
     getLikes();
-    unlock();
-
-    // const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
-    //   console.log('orientation', evt);
-    //   if (evt.orientationInfo.orientation > 2) {
-    //     // show video in fullscreen
-    //     // if (video.current) showVideoInFullScreen();
-    //   }
-    // });
-    // return () => {
-    //   ScreenOrientation.removeOrientationChangeListener(orientSub);
-    //   lock();
-    // };
   }, []);
 
   return (
@@ -126,6 +93,13 @@ const Single = ({route}) => {
         <Text style={styles.itemPrice}>€20</Text>
         <Text style={styles.itemLocation}>Helsinki</Text>
         <ListItem containerStyle={{backgroundColor: colors.lightgray}}>
+          <Icon
+            name="comment"
+            color={colors.primary}
+            onPress={() => {
+              navigation.navigate('Comments');
+            }}
+          />
           {userLikesIt ? (
             <Icon
               name="favorite"
@@ -143,17 +117,11 @@ const Single = ({route}) => {
             Total likes: {likes.length}
           </Text>
         </ListItem>
+
         <Text style={styles.itemDescription}>{description}</Text>
-        <Text style={styles.postedDate}>{timeAdded}</Text>
-        <TouchableOpacity style={styles.button}>
-          <Icon
-            name="envelope"
-            type="font-awesome"
-            color={colors.white}
-            style={{marginRight: 10}}
-          />
-          <Text>Leave a comment</Text>
-        </TouchableOpacity>
+        <Text style={styles.postedDate}>
+          {moment(timeAdded).format('Do MMMM YYYY')}
+        </Text>
       </ScrollView>
     </View>
   );
@@ -248,6 +216,7 @@ const styles = StyleSheet.create({
 
 Single.propTypes = {
   route: PropTypes.object,
+  navigation: PropTypes.object,
 };
 
 export default Single;

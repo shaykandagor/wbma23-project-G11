@@ -63,11 +63,6 @@ const TabScreen = () => {
         options={getTabScreenOptions('search')}
       />
       <Tab.Screen
-        name="Comments"
-        component={Comments}
-        options={getTabScreenOptions('search')}
-      />
-      <Tab.Screen
         name="Favourites"
         component={Favourites}
         options={getTabScreenOptions('star')}
@@ -110,6 +105,11 @@ const StackScreen = () => {
             name="UpdateUser"
             component={UpdateUser}
             options={{title: 'Update Profile'}}
+          />
+          <Stack.Screen
+            name="Comments"
+            component={Comments}
+            options={{title: 'Comments'}}
           />
         </>
       );

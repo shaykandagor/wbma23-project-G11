@@ -6,12 +6,9 @@ import {StyleSheet} from 'react-native';
 import colors from '../config/colors.js';
 import {View} from 'react-native';
 
-// define the List component as a functional component
 const List = ({navigation, myFilesOnly = false}) => {
-  // Call the useMedia hook to fetch and filter media items
+  // Loading the app components with the useMedia hook
   const {mediaArray} = useMedia(myFilesOnly);
-
-  // render the FlatList component with the fetched media items
   return (
     <View containerStyle={styles.container}>
       <FlatList
@@ -27,11 +24,16 @@ const List = ({navigation, myFilesOnly = false}) => {
   );
 };
 
-// define the navigation and myFilesOnly prop types and default values for the List component
+const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+    backgroundColor: colors.white,
+  },
+});
+
 List.propTypes = {
   navigation: PropTypes.object,
   myFilesOnly: PropTypes.bool,
 };
 
-// export the List component as the default export for the module
 export default List;
