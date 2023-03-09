@@ -11,6 +11,7 @@
 <h3 align="center">ReNew</h3>
 
   <p align="center">
+    This React Mobile Application has been developed within the scope of Web Based Mobile Applications
     An application that helps users get rid of unnecessary things in their wardrobe by selling them. Makes the world a better, cleaner place, allows people to reuse things, giving them new life with other people.
     <br />
     <a href="https://github.com/shaykandagor/wbma23-project-G11"><strong>Explore the docs »</strong></a>
@@ -19,6 +20,22 @@
     <a href="https://www.figma.com/proto/dzKQoXmxZIYYKZEXbQU9No/WBMA2023?node-id=46%3A3&scaling=min-zoom&page-id=0%3A1&starting-point-node-id=23%3A4">View Demo</a>
   </p>
 </div>
+
+## Developers and Maintainers
+1. Shayne Kandagor
+1. Yana Krylova
+1. Maiju Himberg
+
+### In-app Technology
+Frontend: React Native and React
+Backend: [MEDIA API DOCS](https://media.mw.metropolia.fi/wbma/docs/)
+
+### User Target and End Users
+1. A fashion-conscious individual who is looking for unique and vintage clothing items.
+1. A budget-conscious consumer who is looking for affordable clothing options.
+1. A sustainable consumer who is looking to reduce their environmental impact by shopping second-hand.
+1. Students and young adults who are looking for trendy and stylish clothing options at an affordable price.
+1. A parents who is looking for gently-used clothing items for their children.
 
 <!-- ABOUT THE PROJECT -->
 
