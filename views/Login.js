@@ -12,7 +12,6 @@ import {Button, Image, Text} from '@rneui/themed';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import colors from '../config/colors';
-import Input from 'react-native-input-style';
 
 // Login function is called when the login button is pressed
 const Login = ({navigation, route}) => {
@@ -23,7 +22,7 @@ const Login = ({navigation, route}) => {
       <View style={styles.card}>
         <Image
           style={styles.logo}
-          source={require('../assets/RenewLogo.png')}
+          source={require('../assets/renewLogo.png')}
         />
       </View>
 

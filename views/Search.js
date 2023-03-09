@@ -16,7 +16,6 @@ import {uploadsUrl} from '../utils/variables';
 import PropTypes from 'prop-types';
 import {ActivityIndicator} from 'react-native';
 
-//
 const Search = ({navigation}) => {
   const [search, setSearch] = useState([]);
   const {searchMedia} = useMedia();
@@ -50,7 +49,7 @@ const Search = ({navigation}) => {
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView>
-        <Card>
+        <Card containerStyle={{marginTop: 15, borderRadius: 20}}>
           <Card.Title> Search for an item</Card.Title>
           <Controller
             control={control}

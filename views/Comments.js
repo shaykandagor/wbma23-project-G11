@@ -32,7 +32,6 @@ const Comments = ({fileId = 6286}) => {
 
   const fetchComments = async () => {
     const commentsResponse = await getCommentsByFileId(fileId);
-    // console.log(commentsResponse);
     setComments(commentsResponse);
   };
   useEffect(() => {
@@ -41,7 +40,7 @@ const Comments = ({fileId = 6286}) => {
 
   const handleAddComment = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
-    const response = await postComment(userToken, {
+    await postComment(userToken, {
       comment: newComment,
       file_id: fileId,
     });

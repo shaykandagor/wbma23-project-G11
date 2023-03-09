@@ -1,11 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFavourite, useMedia} from '../hooks/ApiHooks';
-import {Avatar, Button, Icon, ListItem} from '@rneui/themed';
+import {Avatar, Icon, ListItem} from '@rneui/themed';
 import {useFocusEffect} from '@react-navigation/native';
 import {uploadsUrl} from '../utils/variables';
+import colors from '../config/colors';
 
 const Favourites = () => {
   const [favouriteItems, setFavouritesItems] = useState([]);
@@ -14,10 +15,8 @@ const Favourites = () => {
 
   const renderItem = ({item}) => {
     const media = getMediaByFileId(item.file_id);
-    console.log('media', media);
-
     return (
-      <ListItem>
+      <ListItem key={item.id}>
         {media && (
           <>
             <Avatar rounded source={{uri: uploadsUrl + media.filename}} />
@@ -59,7 +58,7 @@ const Favourites = () => {
     setFavouritesItems(response);
   };
   return (
-    <View>
+    <View style={styles.list}>
       <SwipeListView
         data={favouriteItems}
         useFlatList={true}
@@ -79,6 +78,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     backgroundColor: 'red',
+  },
+  list: {
+    flex: 1,
+    justifyContent: 'space-between',
+    backgroundColor: colors.white,
   },
 });
 
