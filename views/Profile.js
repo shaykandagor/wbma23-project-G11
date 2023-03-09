@@ -41,30 +41,30 @@ const Profile = ({navigation}) => {
           </View>
 
           <ListItem>
-            <Icon name="badge" />
+            <Icon name="badge" color={colors.primary} />
             <ListItem.Title>{user.full_name}</ListItem.Title>
           </ListItem>
           <ListItem>
-            <Icon name="person" />
+            <Icon name="person" color={colors.primary} />
             <ListItem.Title>{user.username}</ListItem.Title>
           </ListItem>
           <ListItem>
-            <Icon name="email" />
+            <Icon name="email" color={colors.primary} />
             <ListItem.Title>{user.email}</ListItem.Title>
           </ListItem>
           <ListItem>
-            <Icon name="call" />
+            <Icon name="call" color={colors.primary} />
             <ListItem.Title>{user.phone_number}</ListItem.Title>
           </ListItem>
           <ListItem>
-            <Icon name="pin-drop" />
+            <Icon name="pin-drop" color={colors.primary} />
             <ListItem.Title>{user.address}</ListItem.Title>
           </ListItem>
           <Card.Divider />
           <Button
             title="MY ACCOUNT"
             buttonStyle={{
-              backgroundColor: colors.secondary,
+              backgroundColor: colors.primary,
               borderWidth: 0,
               borderColor: 'transparent',
               borderRadius: 30,
@@ -98,7 +98,7 @@ const Profile = ({navigation}) => {
               borderWidth: 0,
               borderColor: 'transparent',
               borderRadius: 20,
-              backgroundColor: colors.secondary,
+              backgroundColor: colors.primary,
             }}
             containerStyle={{
               width: 200,
@@ -126,9 +126,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightgreen,
   },
   avatar: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     alignSelf: 'center',
   },
   card: {

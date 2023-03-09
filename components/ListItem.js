@@ -13,7 +13,7 @@ import {StyleSheet} from 'react-native';
 
 const width = Dimensions.get('window').width - 50;
 
-const ListItem = ({singleMedia, navigation}) => {
+const ListItem = ({singleMedia, navigation, profile = true}) => {
   const {user, setUpdate, update} = useContext(MainContext);
   const {deleteMedia} = useMedia();
   const item = singleMedia;
@@ -69,7 +69,7 @@ const ListItem = ({singleMedia, navigation}) => {
               {item.price}
             </RNEListItem.Subtitle>
 
-            {item.user_id === user.user_id && (
+            {profile && item.user_id === user.user_id && (
               <ButtonGroup
                 buttons={['Modify', 'Delete']}
                 rounded
@@ -91,7 +91,7 @@ const ListItem = ({singleMedia, navigation}) => {
 
 const styles = StyleSheet.create({
   itemContainer: {
-    backgroundColor: colors.lightgray,
+    backgroundColor: colors.lightgreen,
     padding: 10,
     borderRadius: 10,
     overflow: 'hidden',
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
 ListItem.propTypes = {
   singleMedia: PropTypes.object,
   navigation: PropTypes.object,
+  profile: PropTypes.bool,
 };
 
 export default ListItem;

@@ -7,8 +7,9 @@ import {Avatar, Icon, ListItem} from '@rneui/themed';
 import {useFocusEffect} from '@react-navigation/native';
 import {uploadsUrl} from '../utils/variables';
 import colors from '../config/colors';
+import PropTypes from 'prop-types';
 
-const Favourites = () => {
+const Favourites = ({navigation}) => {
   const [favouriteItems, setFavouritesItems] = useState([]);
   const {getFavourites, deleteFavourite} = useFavourite();
   const {getMediaByFileId} = useMedia(true);
@@ -16,13 +17,28 @@ const Favourites = () => {
   const renderItem = ({item}) => {
     const media = getMediaByFileId(item.file_id);
     return (
-      <ListItem key={item.id}>
+      <ListItem bottomDivider>
         {media && (
           <>
-            <Avatar rounded source={{uri: uploadsUrl + media.filename}} />
+            <Avatar
+              containerStyle={{
+                marginRight: 20,
+              }}
+              rounded
+              source={{uri: uploadsUrl + media.filename}}
+            />
             <ListItem.Content>
-              <ListItem.Title>{media.title}</ListItem.Title>
+              <ListItem.Title style={{color: 'black', fontWeight: 'bold'}}>
+                {media.title}
+              </ListItem.Title>
             </ListItem.Content>
+            <ListItem.Chevron
+              color="black"
+              onPress={() => {
+                console.log('Item', item);
+                navigation.navigate('Single', getMediaByFileId(item.file_id));
+              }}
+            />
           </>
         )}
       </ListItem>
@@ -85,5 +101,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
 });
+
+Favourites.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default Favourites;

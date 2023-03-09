@@ -36,10 +36,10 @@ const TabScreen = () => {
   return (
     <Tab.Navigator
       tabBarOptions={{
-        activeBackgroundColor: colors.secondary,
+        activeBackgroundColor: colors.primary,
         activeTintColor: colors.white,
-        inactiveBackgroundColor: colors.gray,
-        inactiveTintColor: colors.black,
+        inactiveBackgroundColor: colors.white,
+        inactiveTintColor: colors.darkgray,
       }}
     >
       <Tab.Screen

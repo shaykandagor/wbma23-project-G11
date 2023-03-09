@@ -112,6 +112,7 @@ const useMedia = (myFilesOnly) => {
 
   return {
     mediaArray,
+    setMediaArray,
     postMedia,
     deleteMedia,
     putMedia,

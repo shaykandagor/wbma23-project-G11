@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Card, Button} from '@rneui/themed';
 import {Controller, useForm} from 'react-hook-form';
@@ -19,10 +19,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import colors from '../config/colors';
 import {appId} from '../utils/variables';
+import {useFocusEffect} from '@react-navigation/core';
 
 const Upload = ({navigation}) => {
   const [mediafile, setMediafile] = useState({});
-  const video = useRef(null);
   // Loading is true the Activity Indicator is visible
   // Loading is false the Activity Indicator is hidden
   const [loading, setLoading] = useState(false);
@@ -126,6 +126,20 @@ const Upload = ({navigation}) => {
       console.log(error);
     }
   };
+
+  const resetForm = () => {
+    setMediafile({});
+    reset();
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        resetForm();
+      };
+    }, [])
+  );
+
   const categoryWMKData = [
     {label: 'Women', categoryWMK: 'women'},
     {label: 'Men', categoryWMK: 'men'},
@@ -134,7 +148,7 @@ const Upload = ({navigation}) => {
   const categorytypeData = [
     {label: 'Clothes', value: 'Clothes'},
     {label: 'Shoes', value: 'Shoes'},
-    {label: 'Aceessories', value: 'Aceessories'},
+    {label: 'Accessories', value: 'Accessories'},
   ];
 
   // const [value, setValue] = useState(null);
@@ -151,22 +165,6 @@ const Upload = ({navigation}) => {
       >
         <View style={[styles.wholeview]}>
           <View style={[styles.card, styles.shadowProp, styles.elevation]}>
-            {/* <Button
-              buttonStyle={{
-                height: 200,
-                backgroundColor: colors.lightgreen,
-                borderWidth: 1,
-                borderColor: colors.secondary,
-                borderRadius: 5,
-                margin: 14,
-              }}
-              title="Pick an image"
-              onPress={pickFile}
-              containerViewStyle={{
-                borderRadius: 20,
-                elevation: 15,
-              }}
-            /> */}
             <View style={styles.imageContainer}>
               <Card.Image
                 style={styles.imagestyle}
@@ -312,6 +310,7 @@ const Upload = ({navigation}) => {
                 width: 200,
                 marginHorizontal: 50,
                 marginVertical: 10,
+                alignSelf: 'center',
               }}
             />
             {loading && <ActivityIndicator size="large" />}

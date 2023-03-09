@@ -74,7 +74,7 @@ const Search = ({navigation}) => {
           <Button
             title="SEARCH"
             buttonStyle={{
-              backgroundColor: colors.secondary,
+              backgroundColor: colors.primary,
               borderWidth: 0,
               borderColor: 'transparent',
               borderRadius: 30,
