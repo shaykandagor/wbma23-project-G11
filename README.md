@@ -12,7 +12,6 @@
 
   <p align="center">
     This React Mobile Application has been developed within the scope of Web Based Mobile Applications
-    An application that helps users get rid of unnecessary things in their wardrobe by selling them. Makes the world a better, cleaner place, allows people to reuse things, giving them new life with other people.
     <br />
     <a href="https://github.com/shaykandagor/wbma23-project-G11"><strong>Explore the docs »</strong></a>
     <br />
@@ -26,9 +25,17 @@
 1. Yana Krylova
 1. Maiju Himberg
 
+### Project Description
+ReNew is a mobile app that connects buyers and sellers of second-hand clothing items. The app provides a convenient and user-friendly platform for users to buy and sell high-quality, gently-used clothing items. Sellers can create virtual closets and upload photos of their items, while buyers can easily search for items. In-app messaging allows buyers and sellers to communicate and negotiate prices, while secure payment processing ensures a safe and hassle-free transaction. The app also includes favourites page, allowing users to share their favorite finds. Our goal is to promote sustainability and reduce waste by encouraging people to shop second-hand and make fashion more sustainable.
+ 
+ ## Intended use of the app
+### Sustainability and reduce waste.
+Second-hand clothing app is to provide a user-friendly platform for buyers and sellers to buy and sell high-quality, gently-used clothing items
+
+
 ### In-app Technology
-Frontend: React Native and React
-Backend: [MEDIA API DOCS](https://media.mw.metropolia.fi/wbma/docs/)
+1.Frontend: React Native and React
+1.Backend: [MEDIA API DOCS](https://media.mw.metropolia.fi/wbma/docs/)
 
 ### User Target and End Users
 1. A fashion-conscious individual who is looking for unique and vintage clothing items.
