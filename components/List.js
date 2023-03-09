@@ -2,6 +2,9 @@ import {FlatList} from 'react-native';
 import {useMedia} from '../hooks/ApiHooks';
 import ListItem from './ListItem';
 import PropTypes from 'prop-types';
+import {StyleSheet} from 'react-native';
+import colors from '../config/colors.js';
+import {View} from 'react-native';
 
 // define the List component as a functional component
 const List = ({navigation, myFilesOnly = false}) => {
@@ -10,13 +13,17 @@ const List = ({navigation, myFilesOnly = false}) => {
 
   // render the FlatList component with the fetched media items
   return (
-    <FlatList
-      data={mediaArray}
-      keyExtractor={(item, index) => index.toString()}
-      renderItem={({item}) => (
-        <ListItem navigation={navigation} singleMedia={item} />
-      )}
-    />
+    <View containerStyle={styles.container}>
+      <FlatList
+        data={mediaArray}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={2}
+        contentContainerStyle={{paddingBottom: 60}}
+        renderItem={({item}) => (
+          <ListItem navigation={navigation} singleMedia={item} />
+        )}
+      />
+    </View>
   );
 };
 

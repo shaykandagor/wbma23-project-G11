@@ -17,6 +17,13 @@ const UpdateUser = ({navigation, route}) => {
 
   return (
     <ScrollView>
+      <View style={styles.card}>
+        <Image
+          style={styles.logo}
+          source={require('../assets/renewLogo.png')}
+        />
+      </View>
+
       <TouchableOpacity
         onPress={() => Keyboard.dismiss()}
         style={{flex: 1}}
