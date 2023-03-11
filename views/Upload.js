@@ -21,10 +21,19 @@ import colors from '../config/colors';
 import {appId} from '../utils/variables';
 import {useFocusEffect} from '@react-navigation/core';
 
+const customerCategories = [
+  {label: 'Women', value: 'women'},
+  {label: 'Men', value: 'men'},
+  {label: 'Kids', value: 'kids'},
+];
+const itemCategories = [
+  {label: 'Clothes', value: 'Clothes'},
+  {label: 'Shoes', value: 'Shoes'},
+  {label: 'Accessories', value: 'Accessories'},
+];
+
 const Upload = ({navigation}) => {
   const [mediafile, setMediafile] = useState({});
-  // Loading is true the Activity Indicator is visible
-  // Loading is false the Activity Indicator is hidden
   const [loading, setLoading] = useState(false);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
@@ -37,25 +46,27 @@ const Upload = ({navigation}) => {
     reset,
   } = useForm({
     defaultValues: {
-      // categoryType: '',
-      // categoryWMK: '',
-      price: '',
       title: '',
       description: '',
+      price: '',
+      size: '',
     },
     mode: 'onChange',
   });
 
   // This function enables the user to upload a file with its info
   const uploadFile = async (data) => {
-    //  Creates form data and posts it
     setLoading(true);
     const formData = new FormData();
-    // formData.append('category', JSON.stringify(moreFileData));
-    // formData.append('size', JSON.stringify(moreFileData));
-    // formData.append('price', JSON.stringify(moreFileData));
     formData.append('title', data.title);
-    formData.append('description', data.description);
+    const description = JSON.stringify({
+      description: data.description,
+      customerCategory: currentCustomerCategory,
+      itemCategory: currentItemCategory,
+      price: data.price,
+      size: data.size,
+    });
+    formData.append('description', description);
     const filename = mediafile.uri.split('/').pop();
     let fileExt = filename.split('.').pop();
     if (fileExt === 'jpg') fileExt = 'jpeg';
@@ -65,7 +76,6 @@ const Upload = ({navigation}) => {
       name: filename,
       type: mimeType,
     });
-    console.log('form data', formData);
 
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -77,12 +87,6 @@ const Upload = ({navigation}) => {
       };
       const tagResult = await postTag(appTag, token);
       console.log('tag result', tagResult);
-
-      /* const tagResultCategory = await postTag(setCategoryType, token);
-      console.log('tag result', tagResultCategory);
-
-      const tagResultWMK = await postTag(setWMKcategory, token);
-      console.log('tag result', tagResultWMK); */
 
       Alert.alert('Upload Ok', 'File id: ' + result.file_id, [
         {
@@ -140,21 +144,9 @@ const Upload = ({navigation}) => {
     }, [])
   );
 
-  const categoryWMKData = [
-    {label: 'Women', categoryWMK: 'women'},
-    {label: 'Men', categoryWMK: 'men'},
-    {label: 'Kids', categoryWMK: 'kids'},
-  ];
-  const categorytypeData = [
-    {label: 'Clothes', value: 'Clothes'},
-    {label: 'Shoes', value: 'Shoes'},
-    {label: 'Accessories', value: 'Accessories'},
-  ];
-
-  // const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
-  const [dropDownWMK, setWMKcategory] = useState(null);
-  const [categorytype, setCategoryType] = useState(null);
+  const [currentCustomerCategory, setCurrentCustomerCategory] = useState({});
+  const [currentItemCategory, setcurrentItemCategory] = useState({});
 
   return (
     <ScrollView style={[styles.wholeview]}>
@@ -234,7 +226,7 @@ const Upload = ({navigation}) => {
               )}
               name="description"
             />
-            {/* <Controller
+            <Controller
               control={control}
               rules={{
                 required: {value: true, message: 'Price is required.'},
@@ -255,9 +247,31 @@ const Upload = ({navigation}) => {
                 />
               )}
               name="price"
-              /> */}
+            />
+            <Controller
+              control={control}
+              rules={{
+                required: {value: true, message: 'Size is required.'},
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={styles.inputStyle}
+                  label="Size"
+                  placeholder="Size"
+                  placeholderTextColor={colors.black}
+                  labelStyle={{backgroundColor: colors.lightgray}}
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  autoCapitalize="none"
+                  outlined
+                  borderColor={colors.secondary}
+                />
+              )}
+              name="size"
+            />
 
-            <View style={styles.DropdownContainer}>
+            <View style={styles.dropdownContainer}>
               <Dropdown
                 style={[
                   styles.dropdown,
@@ -266,16 +280,16 @@ const Upload = ({navigation}) => {
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 iconStyle={styles.iconStyle}
-                data={categoryWMKData}
+                data={customerCategories}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
                 placeholder={'Select category'}
-                value={dropDownWMK}
+                value={currentCustomerCategory}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
-                  setWMKcategory(item.value);
+                  setCurrentCustomerCategory(item.value);
                   setIsFocus(false);
                 }}
               />
@@ -287,17 +301,18 @@ const Upload = ({navigation}) => {
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 iconStyle={styles.iconStyle}
-                data={categorytypeData}
+                data={itemCategories}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
                 placeholder={!isFocus ? 'Select category' : '...'}
-                value={categorytype}
+                value={currentItemCategory}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
-                  setCategoryType(item.value);
+                  setcurrentItemCategory(item.value);
                   setIsFocus(false);
+                  console.log('item', item);
                 }}
               />
             </View>
@@ -378,10 +393,10 @@ const styles = StyleSheet.create({
   },
   imagestyle: {
     resizeMode: 'center',
-    height: 400,
-    width: 225,
+    height: 150,
+    width: 150,
     marginBottom: 20,
-    borderRadius: 8,
+    borderRadius: 100,
     borderWidth: 1,
     borderColor: colors.secondary,
   },

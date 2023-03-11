@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useUser} from '../hooks/ApiHooks';
+import {useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
 import {Input, Button, Card} from '@rneui/themed';
 import {View, StyleSheet} from 'react-native';
@@ -7,12 +7,17 @@ import colors from '../config/colors';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
+import * as ImagePicker from 'expo-image-picker';
+import {useFocusEffect} from '@react-navigation/native';
 
 const UpdateUserForm = ({navigation}) => {
   const [token, setToken] = useState('');
   const {user, setUser} = useContext(MainContext);
   const [updated, setUpdated] = useState(false);
   const {putUser, getUserByToken} = useUser();
+  const [avatar, setAvatar] = useState('');
+  const {postMedia} = useMedia();
+  const {postTag} = useTag();
 
   const {
     control,
@@ -28,6 +33,25 @@ const UpdateUserForm = ({navigation}) => {
     mode: 'onBlur',
   });
 
+  const pickFile = async () => {
+    try {
+      // No permissions request is necessary for launching the image library
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [9, 16],
+        quality: 0.5,
+      });
+
+      console.log(result);
+
+      if (!result.canceled) {
+        setAvatar(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const updateUser = async (userData) => {
     const {full_name, email, phone_number, address} = userData;
     const fullName = JSON.stringify({phone_number, address, full_name});
@@ -35,6 +59,15 @@ const UpdateUserForm = ({navigation}) => {
     try {
       const updateMessage = await putUser(profileInfo, token);
       console.log(updateMessage);
+      const formData = new FormData();
+      formData.append('file', {
+        uri: avatar,
+        name: 'file',
+        type: 'image/jpg',
+      });
+      formData.append('title', avatar);
+      const {file_id} = await postMedia(formData, token);
+      await postTag({file_id, tag: 'avatar_' + user.user_id}, token);
       setUpdated(true);
       navigation.navigate('Profile');
     } catch (error) {
@@ -71,6 +104,18 @@ const UpdateUserForm = ({navigation}) => {
     <View style={styles.container}>
       <Card containerStyle={{marginTop: 50, borderRadius: 20}}>
         <Card.Title>Update Profile</Card.Title>
+        <View style={{position: 'relative', alignItems: 'center'}}>
+          <Card.Image
+            style={styles.imagestyle}
+            placeholderStyle={{}}
+            onPress={pickFile}
+            source={{
+              uri:
+                avatar ||
+                'https://t4.ftcdn.net/jpg/04/81/13/43/240_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg',
+            }}
+          />
+        </View>
         <Controller
           control={control}
           rules={{
@@ -187,6 +232,15 @@ const styles = StyleSheet.create({
   logo: {
     width: 250,
     height: 200,
+  },
+  imagestyle: {
+    resizeMode: 'center',
+    height: 150,
+    width: 150,
+    marginBottom: 20,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: colors.secondary,
   },
 });
 

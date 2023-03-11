@@ -65,8 +65,7 @@ const ListItem = ({singleMedia, navigation, profile = true}) => {
               numberOfLines={3}
               style={{color: colors.secondary}}
             >
-              {'20€'}
-              {item.price}
+              {JSON.parse(item.description).price}
             </RNEListItem.Subtitle>
 
             {profile && item.user_id === user.user_id && (
