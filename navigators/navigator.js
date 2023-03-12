@@ -40,6 +40,12 @@ const TabScreen = () => {
         activeTintColor: colors.white,
         inactiveBackgroundColor: colors.white,
         inactiveTintColor: colors.darkgray,
+        tabBarStyle: [
+          {
+            flex: 1,
+          },
+          null,
+        ],
       }}
     >
       <Tab.Screen

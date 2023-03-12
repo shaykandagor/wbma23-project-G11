@@ -15,13 +15,16 @@ const Single = ({route, navigation}) => {
   console.log(route.params);
   const {
     title,
-    description,
+    description: descriptionJSON,
     filename,
     time_added: timeAdded,
     user_id: userId,
     file_id: fileId,
     username: userName,
   } = route.params;
+
+  const {description, price, size, customerCategory, itemCategory} =
+    JSON.parse(descriptionJSON);
 
   const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
@@ -90,7 +93,7 @@ const Single = ({route, navigation}) => {
           />
           <View style={styles.categoryContainer}>
             <Button
-              title="Women"
+              title={customerCategory}
               style={styles.categoryText}
               buttonStyle={{
                 backgroundColor: colors.primary,
@@ -102,7 +105,7 @@ const Single = ({route, navigation}) => {
             />
             {/* <Text style={styles.categoryText}>Women</Text> */}
             <Button
-              title="Size 38"
+              title={`size ${size}`}
               style={styles.categoryText}
               buttonStyle={{
                 backgroundColor: colors.primary,
@@ -113,7 +116,7 @@ const Single = ({route, navigation}) => {
               }}
             />
             <Button
-              title="Trouser"
+              title={itemCategory}
               style={styles.categoryText}
               buttonStyle={{
                 backgroundColor: colors.primary,
@@ -133,12 +136,12 @@ const Single = ({route, navigation}) => {
 
           <ListItem containerStyle={{backgroundColor: colors.lightgreen}}>
             <Icon name="euro" color={colors.primary} />
-            <Text style={styles.items}> 20</Text>
+            <Text style={styles.items}>{price}</Text>
           </ListItem>
 
           <ListItem containerStyle={{backgroundColor: colors.lightgreen}}>
             <Icon name="pin-drop" color={colors.primary} />
-            <Text style={styles.items}>Helsinki</Text>
+            <Text style={styles.items}>{user.address}</Text>
           </ListItem>
 
           <ListItem containerStyle={{backgroundColor: colors.lightgreen}}>

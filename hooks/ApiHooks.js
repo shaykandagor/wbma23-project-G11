@@ -15,7 +15,8 @@ const doFetch = async (url, options) => {
 };
 
 const useMedia = (myFilesOnly) => {
-  const [mediaArray, setMediaArray] = useState([]);
+  const [mediaArray1, setmediaArray1] = useState([]);
+  const [mediaArray, setmediaArray] = useState([]);
   const {update, user} = useContext(MainContext);
 
   const loadMedia = async () => {
@@ -34,7 +35,7 @@ const useMedia = (myFilesOnly) => {
         })
       );
 
-      setMediaArray(media);
+      setmediaArray1(media);
     } catch (error) {
       console.error('List, loadMedia', error);
     }
@@ -45,6 +46,18 @@ const useMedia = (myFilesOnly) => {
     // load media when update state changes in  main context
     // by adding update state to the array below
   }, [update]);
+
+  useEffect(() => {
+    const displayMedia = mediaArray1.filter((media) => {
+      try {
+        JSON.parse(media.description);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    });
+    setmediaArray([...displayMedia]);
+  }, [mediaArray1]);
 
   const postMedia = async (fileData, token) => {
     const options = {
@@ -108,11 +121,12 @@ const useMedia = (myFilesOnly) => {
   };
 
   const getMediaByFileId = (id) =>
-    mediaArray.find((media) => media.file_id === id);
+    mediaArray1.find((media) => media.file_id === id);
 
   return {
     mediaArray,
-    setMediaArray,
+    setmediaArray1,
+    setmediaArray,
     postMedia,
     deleteMedia,
     putMedia,
