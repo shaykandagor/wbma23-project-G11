@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
@@ -6,10 +6,14 @@ import {Controller, useForm} from 'react-hook-form';
 import {Button, Card, Input} from '@rneui/themed';
 import {View, StyleSheet} from 'react-native';
 import colors from '../config/colors';
+import {Alert} from 'react-native';
 
 const LoginForm = () => {
   // Retrieve setIsLoggedIn and setUser from MainContext using useContext hook
   const {setIsLoggedIn, setUser} = useContext(MainContext);
+
+  // Password visibility state
+  const [show, setShow] = useState(false);
 
   // Import postLogin function from useAuthentication custom hook
   const {postLogin} = useAuthentication();
@@ -48,8 +52,12 @@ const LoginForm = () => {
       setIsLoggedIn(true);
     } catch (error) {
       console.error('LogIn', error);
-
-      // TODO: Notify user about failed login attempt
+      // Notify user about failed login attempt
+      Alert.alert('Login', 'Invalid username or password', [
+        {
+          text: 'OK',
+        },
+      ]);
     }
   };
 
@@ -92,9 +100,17 @@ const LoginForm = () => {
                 name: 'lock',
                 color: colors.lightgray,
               }}
+              rightIcon={{
+                name: show ? 'visibility' : 'visibility-off',
+                color: colors.lightgray,
+                onPress: () => {
+                  setShow(!show);
+                  console.log('visible');
+                },
+              }}
               onChangeText={onChange}
               value={value}
-              secureTextEntry={true}
+              secureTextEntry={!show}
               errorMessage={errors.password && errors.password.message}
             />
           )}

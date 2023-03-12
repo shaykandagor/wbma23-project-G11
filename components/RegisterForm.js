@@ -2,61 +2,17 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
 import {Input, Button, Card} from '@rneui/themed';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import colors from '../config/colors';
 import {useNavigation} from '@react-navigation/native';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
-
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowAlert: true,
-//     shouldPlaySound: false,
-//     shouldSetBadge: false,
-//   }),
-// });
-
-// const [expoPushToken, setExpoPushToken] = useState('');
-// const [notification, setNotification] = useState(false);
-// const notificationListener = useRef();
-// const responseListener = useRef();
-
-// const registerForPushNotificationsAsync = () => {
-//   if (!Constants.isDevice) {
-//     alert('Must use physical device for push notifications ');
-//     return null;
-//   }
-//   const { status } = await Notifications.requestPermissionsAsync();
-//   if(status !== "granted") {
-//     alert("Failed to get push token for push notications!");
-//     return null;
-//   }
-// };
-
-// useEffect(() => {
-//   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
-
-//   notificationListener.current = Notifications.addNotificationReceivedListener(
-//     (notification) => {
-//       setNotification(notification);
-//     }
-//   );
-
-//   responseListener.current =
-//     Notifications.addNotificationResponseReceivedListener((response) => {
-//       console.log(response);
-//     });
-
-//   return () => {
-//     Notifications.removeNotificationSubscription(notificationListener.current);
-//     Notifications.removeNotificationSubscription(responseListener.current);
-//   };
-// }, []);
 
 const RegisterForm = () => {
   const navigation = useNavigation();
   // Destructuring postUser and checkUsername from the custom hook useUser
   const {postUser, checkUsername} = useUser();
+
+  // Password visibility state
+  const [show, setShow] = useState(false);
 
   // Destructuring the useForm hook and getting values, errors, handleSubmit, and control from it.
   const {
@@ -95,10 +51,24 @@ const RegisterForm = () => {
       // Calling postUser function with the registerData
       const registerResult = await postUser(registerData);
       console.log('registeration result', registerResult);
-      navigation.navigate('Login', {isRegister: true});
+
+      // Notify user about successfull registration
+      Alert.alert(
+        'Registration successfully!',
+        'user_id ' + registerResult.user_id,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              console.log('OK Pressed');
+              // Navigation to Login screen
+              navigation.navigate('Login', {isRegister: true});
+            },
+          },
+        ]
+      );
     } catch (error) {
-      console.error('register', error);
-      // TODO: Notify user about failed registration attempt
+      console.error('Registration failed', error);
     }
   };
 
@@ -210,10 +180,18 @@ const RegisterForm = () => {
                 name: 'lock',
                 color: colors.lightgray,
               }}
+              rightIcon={{
+                name: show ? 'visibility' : 'visibility-off',
+                color: colors.lightgray,
+                onPress: () => {
+                  setShow(!show);
+                  console.log('visible');
+                },
+              }}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              secureTextEntry={true}
+              secureTextEntry={!show}
               errorMessage={errors.password && errors.password.message}
             />
           )}
@@ -237,10 +215,18 @@ const RegisterForm = () => {
                 name: 'lock',
                 color: colors.lightgray,
               }}
+              rightIcon={{
+                name: show ? 'visibility' : 'visibility-off',
+                color: colors.lightgray,
+                onPress: () => {
+                  setShow(!show);
+                  console.log('visible');
+                },
+              }}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              secureTextEntry={true}
+              secureTextEntry={!show}
               errorMessage={
                 errors.confirmPassword && errors.confirmPassword.message
               }

@@ -6,7 +6,6 @@ import {StyleSheet} from 'react-native';
 import colors from '../config/colors.js';
 import {View} from 'react-native';
 import {useState} from 'react';
-import {shuffleArray} from '../utils/helper';
 import {Text} from '@rneui/themed';
 
 const customerCategories = [
@@ -28,7 +27,8 @@ const List = ({navigation, myFilesOnly = false}) => {
     const {customerCategory} = JSON.parse(media.description);
     if (currentCategory.value === 'all') return true;
     if (currentCategory.value) {
-      const wantedCategory = customerCategory === currentCategory.value;
+      const wantedCategory =
+        customerCategory.toLowerCase() === currentCategory.value.toLowerCase();
       return wantedCategory;
     }
     return true;

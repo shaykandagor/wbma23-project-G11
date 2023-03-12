@@ -22,9 +22,9 @@ import {appId} from '../utils/variables';
 import {useFocusEffect} from '@react-navigation/core';
 
 const customerCategories = [
-  {label: 'Women', value: 'women'},
-  {label: 'Men', value: 'men'},
-  {label: 'Kids', value: 'kids'},
+  {label: 'Women', value: 'Women'},
+  {label: 'Men', value: 'Men'},
+  {label: 'Kids', value: 'Kids'},
 ];
 const itemCategories = [
   {label: 'Clothes', value: 'Clothes'},
